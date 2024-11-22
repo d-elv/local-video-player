@@ -48,6 +48,7 @@ const processFile = async (
       };
     });
   }
+
   return {
     name: file.name,
     thumbnail: null,
@@ -74,8 +75,7 @@ export default function Dashboard() {
         for await (const entry of directoryHandle.values()) {
           if (entry.kind === "file") {
             const file = await entry.getFile();
-            if (!file.type.startsWith("video/")) return;
-
+            if (!file.type.startsWith("video/")) continue;
             const detail = await processFile(file);
             details.push(detail);
           } else if (entry.kind === "directory") {
@@ -90,7 +90,6 @@ export default function Dashboard() {
       alert("Your browser does not support the File System Access API.");
     }
   };
-
   return (
     <main>
       <button
