@@ -2,7 +2,7 @@
 
 import { notFound, useSearchParams } from "next/navigation";
 import Player from "next-video/player";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 // import { Metadata } from "next";
 
@@ -12,23 +12,27 @@ import { useEffect, useRef } from "react";
 
 export default function Watch() {
   const searchParams = useSearchParams();
-
   const videoUrl = searchParams.get("videoUrl");
   const videoRef = useRef<HTMLVideoElement>(null);
-  console.log(videoUrl);
+  const [progress, setProgress] = useState<number>(0);
+
+  function updateProgress() {
+    if (videoRef.current !== null) {
+      setProgress(videoRef.current.currentTime);
+    }
+  }
+
+  setInterval(updateProgress, 5000);
 
   useEffect(() => {
     // For setting the playback location of the video loaded.
     const video = videoRef.current;
-
     if (video) {
       const handleLoadedMetadata = () => {
         // This should be updated to equal "Progress" from db.
-        video.currentTime = 3;
+        video.currentTime = progress;
       };
-
       video.addEventListener("loadedmetadata", handleLoadedMetadata);
-
       return () => {
         video.removeEventListener("loadedmetadata", handleLoadedMetadata);
       };

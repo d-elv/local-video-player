@@ -71,7 +71,6 @@ export default function Dashboard() {
           videoUrl: string;
         }[] = [];
 
-        // Recursively reads chosen directory
         for await (const entry of directoryHandle.values()) {
           if (entry.kind === "file") {
             const file = await entry.getFile();
