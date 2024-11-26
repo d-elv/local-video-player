@@ -13,16 +13,18 @@ import { useEffect, useRef, useState } from "react";
 export default function Watch() {
   const searchParams = useSearchParams();
   const videoUrl = searchParams.get("videoUrl");
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
   const [progress, setProgress] = useState<number>(0);
 
-  function updateProgress() {
-    if (videoRef.current !== null) {
-      setProgress(videoRef.current.currentTime);
-    }
-  }
+  // function updateProgress() {
+  //   if (videoRef.current !== null) {
+  //     setProgress(videoRef.current.currentTime);
+  //   }
+  // }
 
-  setInterval(updateProgress, 5000);
+  // if (videoRef.current !== null) {
+  //   setInterval(updateProgress, 5000);
+  // }
 
   useEffect(() => {
     // For setting the playback location of the video loaded.
