@@ -12,6 +12,15 @@ type VideoInfo = {
   videoUrl: string;
 };
 
+type videoInfoFromDb = {
+  id: string;
+  user_id: string;
+  file_name: string;
+  thumbnail: string;
+  progress: number;
+  duration: number;
+};
+
 const processFile = async (
   file: File
 ): Promise<{
@@ -57,6 +66,49 @@ const processFile = async (
   };
 };
 
+async function fetchVideosInDb() {
+  const supabase = createClient();
+
+  const { data, error } = await supabase.from("videos").select();
+
+  return data;
+}
+
+async function upsertToDb(videoDetails: VideoInfo[]) {
+  const supabase = createClient();
+
+  const videosInDb = await fetchVideosInDb();
+
+  const { data, error } = await supabase
+    .from("videos")
+    .upsert(
+      videoDetails.map((detail) => {
+        if (videosInDb !== null) {
+          const matchingVideo = videosInDb.filter(
+            (video: videoInfoFromDb) => video.id === detail.name
+          );
+          const matchingVideoProgress: videoInfoFromDb = matchingVideo[0];
+          return {
+            id: detail.name,
+            file_name: detail.name, // consider hashing this
+            thumbnail: detail.thumbnail,
+            progress: matchingVideoProgress.progress,
+            duration: detail.duration,
+          };
+        } else {
+          return {
+            id: detail.name,
+            file_name: detail.name, // consider hashing this
+            thumbnail: detail.thumbnail,
+            progress: 0,
+            duration: detail.duration,
+          };
+        }
+      })
+    )
+    .select();
+}
+
 export default function Dashboard() {
   const [fileDetails, setFileDetails] = useState<VideoInfo[]>([]);
 
@@ -85,24 +137,7 @@ export default function Dashboard() {
         }
         setFileDetails(details);
 
-        const supabase = createClient();
-
-        const { data, error } = await supabase
-          .from("videos")
-          .upsert(
-            details.map((detail) => {
-              return {
-                id: detail.name,
-                // consider hashing this
-                file_name: detail.name,
-                thumbnail: detail.thumbnail,
-                progress: 0,
-                duration: detail.duration,
-              };
-            })
-          )
-          .select();
-        console.log(error);
+        upsertToDb(details);
       } catch (error) {
         console.error("Error while accessing the directory:", error);
       }

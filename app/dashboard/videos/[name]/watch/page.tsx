@@ -11,7 +11,7 @@ import { createClient } from "@/utils/supabase/client";
 //   title: "Watch",
 // };
 
-type videoDbInfoFromDb = {
+type videoInfoFromDb = {
   id: string;
   user_id: string;
   file_name: string;
@@ -26,7 +26,7 @@ export default function Watch() {
   const videoUrl = searchParams.get("videoUrl");
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [progress, setProgress] = useState(0);
-  const [videoDbInfo, setVideoDbInfo] = useState<videoDbInfoFromDb>();
+  const [videoDbInfo, setVideoDbInfo] = useState<videoInfoFromDb>();
   const pathname = usePathname();
   const videoName = pathname.split("/")[3];
 
