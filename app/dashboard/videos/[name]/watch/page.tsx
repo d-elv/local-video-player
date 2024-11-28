@@ -1,30 +1,64 @@
 "use client";
 
-import { notFound, useSearchParams } from "next/navigation";
+import { notFound, usePathname, useSearchParams } from "next/navigation";
 import Player from "next-video/player";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { createClient } from "@/utils/supabase/client";
 
 // import { Metadata } from "next";
 
 // export const metadata: Metadata = {
-//   title: "Edit invoice",
+//   title: "Watch",
 // };
 
+type videoDbInfoFromDb = {
+  id: string;
+  user_id: string;
+  file_name: string;
+  thumbnail: string;
+  progress: number;
+  duration: number;
+};
+
 export default function Watch() {
+  const supabase = createClient();
   const searchParams = useSearchParams();
   const videoUrl = searchParams.get("videoUrl");
   const videoRef = useRef<HTMLVideoElement | null>(null);
-  const [progress, setProgress] = useState<number>(0);
+  const [progress, setProgress] = useState(0);
+  const [videoDbInfo, setVideoDbInfo] = useState<videoDbInfoFromDb>();
+  const pathname = usePathname();
+  const videoName = pathname.split("/")[3];
 
-  // function updateProgress() {
-  //   if (videoRef.current !== null) {
-  //     setProgress(videoRef.current.currentTime);
-  //   }
-  // }
+  useLayoutEffect(() => {
+    async function fetchVideoInfo() {
+      const { data, error } = await supabase
+        .from("videos")
+        .select()
+        .eq("id", videoName);
+      if (data !== null) {
+        setVideoDbInfo(data[0]);
+      }
+    }
+    fetchVideoInfo();
+  }, []);
 
-  // if (videoRef.current !== null) {
-  //   setInterval(updateProgress, 5000);
-  // }
+  useEffect(() => {
+    async function updateProgress() {
+      if (videoRef.current !== null) {
+        setProgress(videoRef.current.currentTime);
+        const { data, error } = await supabase
+          .from("videos")
+          .update({ progress: videoRef.current.currentTime })
+          .eq("id", videoName)
+          .select();
+      }
+    }
+
+    const intervalId = setInterval(updateProgress, 5000);
+
+    return () => clearInterval(intervalId); // Cleanup
+  }, []);
 
   useEffect(() => {
     // For setting the playback location of the video loaded.
@@ -32,14 +66,15 @@ export default function Watch() {
     if (video) {
       const handleLoadedMetadata = () => {
         // This should be updated to equal "Progress" from db.
-        video.currentTime = progress;
+
+        video.currentTime = videoDbInfo!.progress;
       };
       video.addEventListener("loadedmetadata", handleLoadedMetadata);
       return () => {
         video.removeEventListener("loadedmetadata", handleLoadedMetadata);
       };
     }
-  }, [videoUrl]);
+  }, [videoDbInfo]);
 
   return (
     <main>

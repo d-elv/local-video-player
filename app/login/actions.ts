@@ -33,7 +33,13 @@ export async function login(formData: FormData) {
   }
 
   const { email, password } = validatedFields.data;
-  const { error } = await supabase.auth.signInWithPassword({ email, password });
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  });
+
+  console.log("Data: ", data);
+  console.log("Error: ", error);
 
   if (error) {
     redirect("/error");
@@ -43,7 +49,7 @@ export async function login(formData: FormData) {
   redirect("/dashboard");
 }
 
-export async function signup(formData: FormData) {
+export async function signUp(formData: FormData) {
   const supabase = await createClient();
 
   const validatedFields = FormSchema.safeParse({
@@ -60,12 +66,15 @@ export async function signup(formData: FormData) {
   }
 
   const { email, password } = validatedFields.data;
-  const { error } = await supabase.auth.signUp({ email, password });
+  const { data, error } = await supabase.auth.signUp({ email, password });
+
+  console.log("Data", data);
+  console.log("Error", error);
 
   if (error) {
     redirect("/error");
   }
 
-  revalidatePath("/dashboard", "layout");
-  redirect("/dashboard");
+  revalidatePath("/", "layout");
+  redirect("/login/confirm");
 }

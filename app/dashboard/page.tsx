@@ -1,6 +1,7 @@
 "use client";
 
 import { formatDuration } from "@/lib/formatters";
+import { createClient } from "@/utils/supabase/client";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -48,7 +49,6 @@ const processFile = async (
       };
     });
   }
-
   return {
     name: file.name,
     thumbnail: null,
@@ -73,14 +73,36 @@ export default function Dashboard() {
 
         for await (const entry of directoryHandle.values()) {
           if (entry.kind === "file") {
+            // function these two lines
             const file = await entry.getFile();
             if (!file.type.startsWith("video/")) continue;
+
+            // promise.all() the result of the previous function
             const detail = await processFile(file);
             details.push(detail);
           } else if (entry.kind === "directory") {
           }
         }
         setFileDetails(details);
+
+        const supabase = createClient();
+
+        const { data, error } = await supabase
+          .from("videos")
+          .upsert(
+            details.map((detail) => {
+              return {
+                id: detail.name,
+                // consider hashing this
+                file_name: detail.name,
+                thumbnail: detail.thumbnail,
+                progress: 0,
+                duration: detail.duration,
+              };
+            })
+          )
+          .select();
+        console.log(error);
       } catch (error) {
         console.error("Error while accessing the directory:", error);
       }
