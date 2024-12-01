@@ -4,6 +4,7 @@ import { formatDuration } from "@/lib/formatters";
 import { createClient } from "@/utils/supabase/client";
 import Link from "next/link";
 import { useState } from "react";
+import { useFileDetails } from "../contexts/FileDetailsContext";
 
 type VideoInfo = {
   name: string;
@@ -21,14 +22,12 @@ type videoInfoFromDb = {
   duration: number;
 };
 
-const processFile = async (
-  file: File
-): Promise<{
+async function processFile(file: File): Promise<{
   name: string;
   thumbnail: string | null;
   duration: number | null;
   videoUrl: string;
-}> => {
+}> {
   if (file.type.startsWith("video/")) {
     const video = document.createElement("video");
     video.src = URL.createObjectURL(file);
@@ -64,13 +63,11 @@ const processFile = async (
     duration: null,
     videoUrl: file.name,
   };
-};
+}
 
 async function fetchVideosInDb() {
   const supabase = createClient();
-
   const { data, error } = await supabase.from("videos").select();
-
   return data;
 }
 
@@ -110,7 +107,7 @@ async function upsertToDb(videoDetails: VideoInfo[]) {
 }
 
 export default function Dashboard() {
-  const [fileDetails, setFileDetails] = useState<VideoInfo[]>([]);
+  const { fileDetails, setFileDetails } = useFileDetails();
 
   const handleFolderSelect = async () => {
     if ("showDirectoryPicker" in window) {

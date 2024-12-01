@@ -18,13 +18,13 @@ export default async function SideNav() {
           <Link href="/dashboard" className="w-full h-full">
             <div className="flex items-center hover:bg-sky-100 w-full p-2 rounded-md">
               <HouseIcon />
-              <p className="pl-2">Dashboard</p>
+              <p className="pl-2">Home</p>
             </div>
           </Link>
           <Link href="/dashboard/videos" className="w-full h-full">
             <div className="flex items-center hover:bg-sky-100 w-full p-2 rounded-md">
               <FilmIcon />
-              <p className="pl-2">Videos</p>
+              <p className="pl-2">Saved Videos</p>
             </div>
           </Link>
         </div>

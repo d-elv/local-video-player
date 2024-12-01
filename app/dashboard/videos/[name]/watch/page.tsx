@@ -4,6 +4,8 @@ import { notFound, usePathname, useSearchParams } from "next/navigation";
 import Player from "next-video/player";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
+import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
 
 // import { Metadata } from "next";
 
