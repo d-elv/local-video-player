@@ -21,7 +21,7 @@ export default async function SideNav() {
               <p className="pl-2">Home</p>
             </div>
           </Link>
-          <Link href="/dashboard/videos" className="w-full h-full">
+          <Link href="/dashboard/saved-videos" className="w-full h-full">
             <div className="flex items-center hover:bg-sky-100 w-full p-2 rounded-md">
               <FilmIcon />
               <p className="pl-2">Saved Videos</p>

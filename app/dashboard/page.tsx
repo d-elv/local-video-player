@@ -3,7 +3,6 @@
 import { formatDuration } from "@/lib/formatters";
 import { createClient } from "@/utils/supabase/client";
 import Link from "next/link";
-import { useState } from "react";
 import { useFileDetails } from "../contexts/FileDetailsContext";
 
 type VideoInfo = {
@@ -13,7 +12,7 @@ type VideoInfo = {
   videoUrl: string;
 };
 
-type videoInfoFromDb = {
+type VideoInfoFromDb = {
   id: string;
   user_id: string;
   file_name: string;
@@ -82,9 +81,9 @@ async function upsertToDb(videoDetails: VideoInfo[]) {
       videoDetails.map((detail) => {
         if (videosInDb !== null) {
           const matchingVideo = videosInDb.filter(
-            (video: videoInfoFromDb) => video.id === detail.name
+            (video: VideoInfoFromDb) => video.id === detail.name
           );
-          const matchingVideoProgress: videoInfoFromDb = matchingVideo[0];
+          const matchingVideoProgress: VideoInfoFromDb = matchingVideo[0];
           return {
             id: detail.name,
             file_name: detail.name, // consider hashing this
