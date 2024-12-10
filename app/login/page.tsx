@@ -1,6 +1,7 @@
 import { createClient } from "@/utils/supabase/server";
 import { login, signUp } from "./actions";
 import { redirect } from "next/navigation";
+import { FormButton } from "../ui/shared/FormButton";
 
 export default async function LoginPage() {
   const supabase = await createClient();
@@ -35,18 +36,8 @@ export default async function LoginPage() {
           className="text-black font-sans rounded-md p-1 pl-2"
         />
         <div className="flex flex-row justify-around mt-4">
-          <button
-            formAction={login}
-            className="rounded-lg bg-primary hover:bg-primary-foreground pl-4 pr-4 pt-1 pb-1 transition-colors"
-          >
-            Log in
-          </button>
-          <button
-            formAction={signUp}
-            className="rounded-lg bg-primary hover:bg-primary-foreground pl-4 pr-4 pt-1 pb-1 transition-colors"
-          >
-            Sign up
-          </button>
+          <FormButton formAction={login}>Log in</FormButton>
+          <FormButton formAction={signUp}>Sign up</FormButton>
         </div>
       </form>
     </div>

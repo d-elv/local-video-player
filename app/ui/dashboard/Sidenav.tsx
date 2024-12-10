@@ -1,17 +1,22 @@
 import { FilmIcon, HouseIcon, PowerIcon } from "lucide-react";
 import Link from "next/link";
-
+import Image from "next/image";
+import Logo from "../../../public/logo-640x360.png";
 import SignOutButton from "./SignOutButton";
+import { DarkModeToggle } from "@/app/components/DarkModeToggle";
 
 export default async function SideNav() {
   return (
-    <div className="flex h-full md:flex-col px-3 py-4 md:px-2">
+    <div className="flex h-full md:flex-col px-3 py-4 md:px-2 w-48">
       <Link
-        className="mb-2 flex h-20 items-center justify-center rounded-md bg-blue-600 p-4"
+        className="mb-2 h-20 rounded-lg bg-blue-200 relative"
         href="/dashboard"
       >
-        Logo
-        <div className="w-32 text-black md:w-40"></div>
+        <Image
+          src={Logo}
+          alt="Beth's Logo"
+          className="object-cover rounded-md h-20"
+        />
       </Link>
       <div className="flex grow flex-row justify-between space-x-2 md:flex-col md:space-x-0 md:space-y-2">
         <div className="h-auto w-full grow rounded-md bg-gray-50 md:block text-black">
@@ -27,6 +32,9 @@ export default async function SideNav() {
               <p className="pl-2">Saved Videos</p>
             </div>
           </Link>
+          <div className="w-full hover:bg-sky-100 p-2 block self-end">
+            <DarkModeToggle />
+          </div>
         </div>
         <SignOutButton />
       </div>
