@@ -1,14 +1,38 @@
 "use client";
 
-import { MoonStar, SunMedium } from "lucide-react";
-import { useDarkMode } from "../contexts/DarkModeContext";
+import { MoonStar, SunMedium, SunMoon } from "lucide-react";
+import { useState, useEffect } from "react";
+import { useTheme } from "next-themes";
 
-export function DarkModeToggle() {
-  const { darkMode, toggleDarkMode } = useDarkMode();
+export function ThemeSwitch() {
+  const [mounted, setMounted] = useState(false);
+  const { setTheme, resolvedTheme } = useTheme();
 
-  return (
-    <button onClick={toggleDarkMode} className="w-full flex items-center">
-      {darkMode ? <SunMedium /> : <MoonStar />}
-    </button>
-  );
+  useEffect(() => setMounted(true), []);
+
+  if (!mounted)
+    return (
+      <div className="flex p-2 w-full">
+        <SunMoon />
+        <p className="pl-2"> </p>
+      </div>
+    );
+
+  if (resolvedTheme === "dark") {
+    return (
+      <button className="flex p-2 w-full" onClick={() => setTheme("light")}>
+        <SunMedium />
+        <p className="pl-2">Dark Mode</p>
+      </button>
+    );
+  }
+
+  if (resolvedTheme === "light") {
+    return (
+      <button className="flex p-2 w-full" onClick={() => setTheme("dark")}>
+        <MoonStar />
+        <p className="pl-2">Light Mode</p>
+      </button>
+    );
+  }
 }
