@@ -18,10 +18,12 @@ export default function SignOutButton() {
   return (
     <button
       onClick={handleSignOut}
-      className="flex h-[48px] w-full grow items-center justify-center gap-2 rounded-md bg-gray-50 p-3 text-sm font-medium hover:bg-sky-100 hover:text-blue-600 md:flex-none md:justify-start md:p-2 md:px-3"
+      className="p-2 flex h-full w-28 md:w-full items-center justify-center text-sm font-medium rounded-tl-md md:rounded-md bg-gray-50 md:gap-2  md:text-base md:h-[48px] hover:bg-sky-100 hover:text-blue-600 md:flex-none md:justify-start md:p-2 md:px-3"
     >
       <PowerIcon className="w-6 text-black" />
-      <div className="hidden md:block text-black">Sign Out</div>
+      <p className="text-sm hidden md:text-base md:block text-black">
+        Sign Out
+      </p>
     </button>
   );
 }

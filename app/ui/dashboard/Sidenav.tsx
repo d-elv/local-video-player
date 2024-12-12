@@ -1,43 +1,44 @@
 import { FilmIcon, HouseIcon } from "lucide-react";
 import Link from "next/link";
-import Image from "next/image";
-import Logo from "../../../public/logo-640x360.png";
 import SignOutButton from "./SignOutButton";
 import { ThemeSwitch } from "@/app/components/DarkModeToggle";
 
 export default async function SideNav() {
   return (
-    <div className="flex h-full md:flex-col px-3 py-4 md:px-2 w-48">
+    <div className="flex h-16 md:h-full md:flex-col md:py-4 md:px-2 md:w-48">
       <Link
-        className="mb-2 h-20 rounded-lg bg-blue-200 relative"
+        className="flex w-28 md:w-full md:h-20 rounded-lg bg-blue-200"
         href="/dashboard"
       >
-        <Image
-          src={Logo}
-          alt="Beth's Logo"
-          className="object-cover rounded-md h-20"
-        />
+        <div className="bg-[#00FFFF] grow md:rounded-tl-md md:rounded-bl-md"></div>
+        <div className="bg-[#FF00FF] grow"></div>
+        <div className="bg-[#FFFF00] grow"></div>
+        <div className="bg-[#000000] grow rounded-tr-md md:rounded-br-md"></div>
       </Link>
-      <div className="flex grow flex-row justify-between space-x-2 md:flex-col md:space-x-0 md:space-y-2">
-        <div className="w-full h-full flex justify-start rounded-md bg-gray-50 md:flex-col text-black">
-          <Link href="/dashboard" className="w-full">
-            <div className="flex items-center hover:bg-sky-100 w-full p-2 rounded-md">
-              <HouseIcon />
-              <p className="pl-2">Home</p>
-            </div>
-          </Link>
-          <Link href="/dashboard/saved-videos" className="w-full">
-            <div className="flex items-center hover:bg-sky-100 w-full p-2 rounded-md">
-              <FilmIcon />
-              <p className="pl-2">Saved Videos</p>
-            </div>
-          </Link>
-          <div className="w-full hover:bg-sky-100 rounded-md mt-auto">
-            <ThemeSwitch />
+      <div className="flex w-full h-full items-center justify-around rounded-tl-md rounded-tr-md ml-2 mr-2 bg-gray-50 text-black md:rounded-md md:ml-0 md:mt-2 md:mb-2 md:items-start md:justify-start md:flex-col ">
+        <Link
+          href="/dashboard"
+          className="flex justify-center items-center w-full h-full md:justify-start md:h-10 hover:bg-sky-100"
+        >
+          <div className="flex rounded-md md:p-2">
+            <HouseIcon />
+            <p className="pl-2">Home</p>
           </div>
+        </Link>
+        <Link
+          href="/dashboard/saved-videos"
+          className="flex justify-center items-center w-full h-full md:justify-start md:h-10 hover:bg-sky-100"
+        >
+          <div className="flex rounded-md md:p-2">
+            <FilmIcon />
+            <p className="pl-2">Saved Videos</p>
+          </div>
+        </Link>
+        <div className="flex justify-center items-center w-full h-full md:justify-start md:h-10 hover:bg-sky-100  md:mt-auto">
+          <ThemeSwitch />
         </div>
-        <SignOutButton />
       </div>
+      <SignOutButton />
     </div>
   );
 }
