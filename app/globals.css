@@ -6,7 +6,7 @@ html {
   --background: 228, 11%, 95%; /* Light neutral */
   --foreground: 210, 15%, 20%; /* Dark gray */
   --primary: 14, 75%, 50%; /* #CA3F2E - Red */
-  --primary-foreground: 0, 0%, 98%; /* White */
+  --primary-foreground: 210, 15%, 20%; /* White */
   --secondary: 220, 55%, 50%; /* #3F7ABS - Blue */
   --secondary-foreground: 0, 0%, 98%; /* White */
   --muted: 35, 29%, 76%; /* #D2BEA5 - Neutral */
