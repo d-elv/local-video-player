@@ -1,4 +1,4 @@
-import { FilmIcon, HouseIcon, PowerIcon } from "lucide-react";
+import { FilmIcon, HouseIcon } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import Logo from "../../../public/logo-640x360.png";

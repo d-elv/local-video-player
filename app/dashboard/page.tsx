@@ -66,7 +66,7 @@ async function processFile(file: File): Promise<{
 
 async function fetchVideosInDb() {
   const supabase = createClient();
-  const { data, error } = await supabase.from("videos").select();
+  const { data } = await supabase.from("videos").select();
   return data;
 }
 
@@ -75,7 +75,7 @@ async function upsertToDb(videoDetails: VideoInfo[]) {
 
   const videosInDb = await fetchVideosInDb();
 
-  const { data, error } = await supabase
+  const { data } = await supabase
     .from("videos")
     .upsert(
       videoDetails.map((detail) => {
@@ -83,26 +83,31 @@ async function upsertToDb(videoDetails: VideoInfo[]) {
           const matchingVideo = videosInDb.filter(
             (video: VideoInfoFromDb) => video.id === detail.name
           );
-          const matchingVideoProgress: VideoInfoFromDb = matchingVideo[0];
-          return {
-            id: detail.name,
-            file_name: detail.name, // consider hashing this
-            thumbnail: detail.thumbnail,
-            progress: matchingVideoProgress.progress,
-            duration: detail.duration,
-          };
-        } else {
-          return {
-            id: detail.name,
-            file_name: detail.name, // consider hashing this
-            thumbnail: detail.thumbnail,
-            progress: 0,
-            duration: detail.duration,
-          };
+          if (matchingVideo.length === 0) {
+            return {
+              id: detail.name,
+              file_name: detail.name, // consider hashing this
+              thumbnail: detail.thumbnail,
+              progress: 0,
+              duration: detail.duration,
+            };
+          } else {
+            const matchingVideoProgress: VideoInfoFromDb = matchingVideo[0];
+            return {
+              id: detail.name,
+              file_name: detail.name, // consider hashing this
+              thumbnail: detail.thumbnail,
+              progress: matchingVideoProgress.progress,
+              duration: detail.duration,
+            };
+          }
         }
       })
     )
     .select();
+
+  if (data) {
+  }
 }
 
 export default function Dashboard() {
@@ -165,7 +170,7 @@ export default function Dashboard() {
               >
                 {file.thumbnail ? (
                   <img
-                    alt="Video Thumbnail"
+                    alt={`Thumbnail of video titled ${file.name}`}
                     src={file.thumbnail}
                     className="w-[102px] h-[72px] object-cover rounded-tl-lg rounded-bl-lg"
                   />

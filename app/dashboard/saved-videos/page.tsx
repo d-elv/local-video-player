@@ -18,7 +18,7 @@ export default function SavedVideos() {
   useEffect(() => {
     async function fetchVideosInDb() {
       const supabase = createClient();
-      const { data, error } = await supabase.from("videos").select();
+      const { data } = await supabase.from("videos").select();
       if (data !== null) {
         setVideosFromDb(data);
       }
@@ -38,7 +38,7 @@ export default function SavedVideos() {
             >
               {file.thumbnail ? (
                 <img
-                  alt="Video Thumbnail"
+                  alt={`Thumbnail of video titled ${file.file_name}`}
                   src={file.thumbnail}
                   className="w-[102px] h-[72px] object-cover rounded-tl-lg rounded-bl-lg"
                 />
