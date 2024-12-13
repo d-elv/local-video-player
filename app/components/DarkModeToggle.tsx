@@ -12,15 +12,18 @@ export function ThemeSwitch() {
 
   if (!mounted)
     return (
-      <div className="flex p-2 w-full">
+      <div className="flex w-full justify-center md:justify-start md:p-2">
         <SunMoon />
-        <p className="pl-2"> </p>
+        <p className="pl-2">Mode</p>
       </div>
     );
 
   if (resolvedTheme === "dark") {
     return (
-      <button className="flex p-2 w-full" onClick={() => setTheme("light")}>
+      <button
+        className="flex w-full justify-center md:justify-start md:p-2"
+        onClick={() => setTheme("light")}
+      >
         <SunMedium />
         <p className="pl-2">Dark Mode</p>
       </button>
@@ -29,7 +32,10 @@ export function ThemeSwitch() {
 
   if (resolvedTheme === "light") {
     return (
-      <button className="flex p-2 w-full" onClick={() => setTheme("dark")}>
+      <button
+        className="flex w-full justify-center md:justify-start md:p-2"
+        onClick={() => setTheme("dark")}
+      >
         <MoonStar />
         <p className="pl-2">Light Mode</p>
       </button>

@@ -166,7 +166,7 @@ export default function Dashboard() {
                   pathname: `/dashboard/videos/${file.name}/watch`,
                   query: { videoUrl: file.videoUrl },
                 }}
-                className="w-full h-full flex items-center justify-start hover:bg-sky-400 rounded-lg transition-all"
+                className="h-full flex items-center justify-start hover:bg-sky-400 rounded-lg transition-all"
               >
                 {file.thumbnail ? (
                   <img
@@ -177,7 +177,7 @@ export default function Dashboard() {
                 ) : null}
                 <p className="text-black truncate ml-2 lg:ml-4">{file.name}</p>
                 {file.duration ? (
-                  <p className="text-black ml-auto mr-2 lg:mr-4">
+                  <p className="text-black ml-auto mr-2 max-w-full lg:mr-4">
                     {formatDuration(file.duration)}
                   </p>
                 ) : null}
