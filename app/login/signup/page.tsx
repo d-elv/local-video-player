@@ -1,7 +1,7 @@
 import { createClient } from "@/utils/supabase/server";
-import { login } from "./actions";
+import { signUp } from "../actions";
 import { redirect } from "next/navigation";
-import { FormButton } from "../ui/shared/FormButton";
+import { FormButton } from "../../ui/shared/FormButton";
 import Link from "next/link";
 
 export default async function LoginPage() {
@@ -17,7 +17,7 @@ export default async function LoginPage() {
     <div className="absolute top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%] flex justify-center items-center">
       <form
         className="flex flex-col place-content-center rounded-lg border-gray-700 webk border-2 p-4 bg-secondary w-96"
-        key="login-form"
+        key="signup-form"
       >
         <label htmlFor="email" className="text-sm">
           Email
@@ -27,7 +27,7 @@ export default async function LoginPage() {
           name="email"
           type="email"
           required
-          className="bg-background-hover text-primary-foreground font-sans rounded-md mt-1 p-1 pl-2 "
+          className="bg-background-hover text-primary-foreground font-sans rounded-md mt-1 p-1 pl-2"
         />
         <label htmlFor="password" className="text-sm mt-2">
           Password
@@ -40,10 +40,10 @@ export default async function LoginPage() {
           className="bg-background-hover text-primary-foreground font-sans rounded-md p-1 pl-2"
         />
         <div className="flex flex-row justify-between items-center mt-4">
-          <FormButton formAction={login}>Log in</FormButton>
+          <FormButton formAction={signUp}>Sign Up</FormButton>
           <p className="text-sm">
-            Not Signed Up?{" "}
-            <Link href="/login/signup" className="italic">
+            Already signed up?{" "}
+            <Link href="/login" className="italic">
               Click Here
             </Link>
           </p>

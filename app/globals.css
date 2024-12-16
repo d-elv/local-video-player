@@ -29,6 +29,7 @@ html {
 @media (prefers-color-scheme: dark) {
   html.dark {
     --background: 210, 15%, 10%; /* #282522 - Dark gray */
+    --background-hover: 210, 15%, 15%;
     --foreground: 228, 11%, 95%; /* Light neutral */
     --primary: 14, 75%, 50%; /* #CA3F2E - Red */
     --primary-foreground: 0, 0%, 98%; /* Dark Grey */
@@ -51,4 +52,13 @@ body {
   background: hsl(var(--background));
   font-family: Arial, Helvetica, sans-serif;
   transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:focus {
+  transition: background-color 0s 600000s, color 0s 600000s !important;
+}
+
+input:focus {
+  outline-offset: 0 !important;
 }
