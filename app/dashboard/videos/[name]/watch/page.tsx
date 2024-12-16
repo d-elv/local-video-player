@@ -66,7 +66,7 @@ export default function Watch() {
 
     const intervalId = setInterval(updateProgress, 5000);
 
-    return () => clearInterval(intervalId); // Cleanup
+    return () => clearInterval(intervalId);
   }, [supabase, videoName]);
 
   useEffect(() => {
@@ -76,12 +76,10 @@ export default function Watch() {
 
       const handleLoadedMetadata = () => {
         video.currentTime = videoDbInfo!.progress;
-        // video.pause();
       };
 
       if (video.readyState >= 1) {
         video.currentTime = videoDbInfo.progress;
-        // video.pause();
       } else {
         video.addEventListener("loadedmetadata", handleLoadedMetadata);
       }
