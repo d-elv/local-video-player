@@ -6,6 +6,7 @@ import { redirect } from "next/navigation";
 import { FormButton } from "../ui/shared/FormButton";
 import Link from "next/link";
 import { useActionState, useEffect } from "react";
+import { useToast } from "@/hooks/use-toast";
 
 export default function LoginPage() {
   const initialState = { success: false, message: "" };
@@ -13,6 +14,7 @@ export default function LoginPage() {
     login,
     initialState
   );
+  const { toast } = useToast();
 
   useEffect(() => {
     // check this works
@@ -27,6 +29,21 @@ export default function LoginPage() {
     }
     redirectSignedInUser();
   }, []);
+
+  useEffect(() => {
+    if (response.success) {
+      toast({
+        title: "Login Successful",
+        description: response.message,
+      });
+    } else {
+      toast({
+        variant: "destructive",
+        title: "Login failed",
+        description: response.message,
+      });
+    }
+  }, [response]);
 
   return (
     <div className="absolute top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%] flex justify-center items-center">
@@ -59,14 +76,15 @@ export default function LoginPage() {
           <FormButton type="submit" disabled={isPending}>
             Log in
           </FormButton>
-          <p className="text-sm">
+          <p className="text-sm mb-0">
             Not Signed Up?{" "}
             <Link href="/login/signup" className="italic">
               Click Here
             </Link>
           </p>
         </div>
-        {isPending ? "" : response.message}
+
+        {/* {response.success === false && isPending ? "success!" : ""} */}
       </form>
     </div>
   );

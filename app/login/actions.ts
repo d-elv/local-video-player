@@ -48,7 +48,7 @@ export async function login(prevState: Login, formData: FormData) {
 
   if (error) {
     // return "Failed";
-    return { success: false, message: `Failed to login, ${error.code}` };
+    return { success: false, message: `${error.code}` };
     // redirect("/error");
   }
   // return "Success";
