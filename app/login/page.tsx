@@ -8,7 +8,8 @@ import Link from "next/link";
 import { useActionState, useEffect } from "react";
 
 export default function LoginPage() {
-  const [message, loginAction, isPending] = useActionState(login, {});
+  const initialState = { success: false, message: "" };
+  const [message, loginAction, isPending] = useActionState(login, initialState);
 
   useEffect(() => {
     // check this works
@@ -62,7 +63,7 @@ export default function LoginPage() {
             </Link>
           </p>
         </div>
-        {isPending ? "" : message?.error}
+        {isPending ? "" : message.message}
       </form>
     </div>
   );
