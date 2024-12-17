@@ -1,23 +1,35 @@
-import { createClient } from "@/utils/supabase/server";
+"use client";
+
+import { createClient } from "@/utils/supabase/client";
 import { login } from "./actions";
 import { redirect } from "next/navigation";
 import { FormButton } from "../ui/shared/FormButton";
 import Link from "next/link";
+import { useActionState, useEffect } from "react";
 
-export default async function LoginPage() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (user) {
-    redirect("/dashboard");
-  }
+export default function LoginPage() {
+  const [message, loginAction, isPending] = useActionState(login, {});
+
+  useEffect(() => {
+    // check this works
+    async function redirectSignedInUser() {
+      const supabase = createClient();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (user) {
+        redirect("/dashboard");
+      }
+    }
+    redirectSignedInUser();
+  }, []);
 
   return (
     <div className="absolute top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%] flex justify-center items-center">
       <form
         className="flex flex-col place-content-center rounded-lg border-gray-700 webk border-2 p-4 bg-secondary w-96"
         key="login-form"
+        action={loginAction}
       >
         <label htmlFor="email" className="text-sm">
           Email
@@ -40,7 +52,9 @@ export default async function LoginPage() {
           className="bg-background-hover text-primary-foreground font-sans rounded-md p-1 pl-2"
         />
         <div className="flex flex-row justify-between items-center mt-4">
-          <FormButton formAction={login}>Log in</FormButton>
+          <FormButton type="submit" disabled={isPending}>
+            Log in
+          </FormButton>
           <p className="text-sm">
             Not Signed Up?{" "}
             <Link href="/login/signup" className="italic">
@@ -48,6 +62,7 @@ export default async function LoginPage() {
             </Link>
           </p>
         </div>
+        {isPending ? "" : message?.error}
       </form>
     </div>
   );

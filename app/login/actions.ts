@@ -16,7 +16,12 @@ const FormSchema = z.object({
     .min(6, { message: "Password must be 6 or more characters long." }),
 });
 
-export async function login(formData: FormData) {
+type Login = {
+  success: boolean;
+  message: string;
+};
+
+export async function login(prevState: Login, formData: FormData) {
   const supabase = await createClient();
 
   const validatedFields = FormSchema.safeParse({
@@ -29,7 +34,7 @@ export async function login(formData: FormData) {
       validatedFields.error.flatten().fieldErrors,
       "Missing Fields. Failed to login."
     );
-    return;
+    return { success: false, message: "Missing Fields. Failed to login" };
   }
 
   const { email, password } = validatedFields.data;
@@ -42,11 +47,17 @@ export async function login(formData: FormData) {
   console.log("Error: ", error);
 
   if (error) {
-    redirect("/error");
+    // return "Failed";
+    return { success: false, message: `Failed to login, ${error.code}` };
+    // redirect("/error");
   }
-
-  revalidatePath("/dashboard", "layout");
-  redirect("/dashboard");
+  // return "Success";
+  return {
+    success: true,
+    message: `Login successful, welcome ${data.user.email}`,
+  };
+  // revalidatePath("/dashboard", "layout");
+  // redirect("/dashboard");
 }
 
 export async function signUp(formData: FormData) {
