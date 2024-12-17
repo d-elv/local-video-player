@@ -9,7 +9,10 @@ import { useActionState, useEffect } from "react";
 
 export default function LoginPage() {
   const initialState = { success: false, message: "" };
-  const [message, loginAction, isPending] = useActionState(login, initialState);
+  const [response, loginAction, isPending] = useActionState(
+    login,
+    initialState
+  );
 
   useEffect(() => {
     // check this works
@@ -63,7 +66,7 @@ export default function LoginPage() {
             </Link>
           </p>
         </div>
-        {isPending ? "" : message.message}
+        {isPending ? "" : response.message}
       </form>
     </div>
   );
