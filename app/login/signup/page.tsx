@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { FormButton } from "../../ui/shared/FormButton";
 import Link from "next/link";
 
-export default async function LoginPage() {
+export default async function SignupPage() {
   const supabase = await createClient();
   const {
     data: { user },

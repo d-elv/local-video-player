@@ -36,7 +36,7 @@ export default function LoginPage() {
         title: "Login Successful",
         description: response.message,
       });
-    } else {
+    } else if (response.success === false && response.message !== "") {
       toast({
         variant: "destructive",
         title: "Login failed",
