@@ -12,7 +12,7 @@ export default function ErrorPage() {
         </h1>
       </Link>
       <h2>
-        Which will send you to the login page if you aren't already logged in.
+        Which will send you to the login page if you are not already logged in.
       </h2>
     </div>
   );
