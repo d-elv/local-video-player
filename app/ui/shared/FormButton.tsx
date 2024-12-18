@@ -7,7 +7,7 @@ export function FormButton({ children, ...attributes }: Props) {
     <button
       {...attributes}
       type="submit"
-      className="rounded-lg bg-primary hover:bg-primary-foreground pl-4 pr-4 pt-1 pb-1 transition-colors"
+      className="rounded-lg bg-background text-foreground pl-4 pr-4 h-10 transition-colors hover:bg-background-hover"
     >
       {children}
     </button>

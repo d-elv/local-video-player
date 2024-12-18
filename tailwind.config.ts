@@ -1,11 +1,11 @@
 import type { Config } from "tailwindcss";
 
 export default {
-  darkMode: "class",
+  darkMode: ["class", "class"],
   content: [
-    "./pages/**/*.{js,ts,jsx,tsx,mdx}",
-    "./components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./pages/**/*.{ts,tsx,mdx}",
+    "./components/**/*.{ts,tsx,mdx}",
+    "./app/**/*.{ts,tsx,mdx}",
   ],
   theme: {
     extend: {
@@ -42,6 +42,14 @@ export default {
           "4": "hsl(var(--chart-4))",
           "5": "hsl(var(--chart-5))",
         },
+        card: {
+          DEFAULT: "hsl(var(--card))",
+          foreground: "hsl(var(--card-foreground))",
+        },
+        popover: {
+          DEFAULT: "hsl(var(--popover))",
+          foreground: "hsl(var(--popover-foreground))",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -50,5 +58,5 @@ export default {
       },
     },
   },
-  plugins: [],
+  plugins: [require("tailwindcss-animate")],
 } satisfies Config;

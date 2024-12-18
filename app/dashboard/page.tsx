@@ -32,7 +32,7 @@ async function processFile(file: File): Promise<{
     video.src = URL.createObjectURL(file);
     return new Promise((resolve) => {
       video.onloadedmetadata = () => {
-        // Capture thumbnail at 1 second
+        // Captures thumbnail at 1 second
         video.currentTime = 1;
       };
 
@@ -86,7 +86,7 @@ async function upsertToDb(videoDetails: VideoInfo[]) {
           if (matchingVideo.length === 0) {
             return {
               id: detail.name,
-              file_name: detail.name, // consider hashing this
+              file_name: detail.name,
               thumbnail: detail.thumbnail,
               progress: 0,
               duration: detail.duration,
@@ -95,7 +95,7 @@ async function upsertToDb(videoDetails: VideoInfo[]) {
             const matchingVideoProgress: VideoInfoFromDb = matchingVideo[0];
             return {
               id: detail.name,
-              file_name: detail.name, // consider hashing this
+              file_name: detail.name,
               thumbnail: detail.thumbnail,
               progress: matchingVideoProgress.progress,
               duration: detail.duration,
@@ -155,7 +155,6 @@ export default function Dashboard() {
       >
         Scan a folder with the media you want to watch
       </button>
-      {/* TO ADD: Radio Button options of selecting files in stead of folders */}
 
       {fileDetails.length > 0 ? (
         <ul>
