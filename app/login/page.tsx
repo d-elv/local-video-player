@@ -18,7 +18,6 @@ export default function LoginPage() {
   const { toast } = useToast();
 
   useEffect(() => {
-    // check this works
     async function redirectSignedInUser() {
       const supabase = createClient();
       const {
@@ -86,8 +85,6 @@ export default function LoginPage() {
             </Link>
           </p>
         </div>
-
-        {/* {response.success === false && isPending ? "success!" : ""} */}
       </form>
     </div>
   );
