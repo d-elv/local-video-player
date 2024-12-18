@@ -7,6 +7,7 @@ import { FormButton } from "../ui/shared/FormButton";
 import Link from "next/link";
 import { useActionState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
+import { revalidatePath } from "next/cache";
 
 export default function LoginPage() {
   const initialState = { success: false, message: "" };
@@ -36,6 +37,8 @@ export default function LoginPage() {
         title: "Login Successful",
         description: response.message,
       });
+      revalidatePath("/dashboard", "layout");
+      redirect("/dashboard");
     } else if (response.success === false && response.message !== "") {
       toast({
         variant: "destructive",
