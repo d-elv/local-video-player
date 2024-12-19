@@ -47,6 +47,7 @@ async function processFile(file: File): Promise<{
 
       const thumbnail = canvas.toDataURL("image/png");
 
+      alert(thumbnail);
       resolve({
         name: file.name,
         thumbnail,
