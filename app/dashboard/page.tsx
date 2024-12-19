@@ -28,41 +28,34 @@ async function processFile(file: File): Promise<{
   duration: number | null;
   videoUrl: string;
 }> {
-  if (file.type.startsWith("video/")) {
-    const video = document.createElement("video");
-    video.src = URL.createObjectURL(file);
-    return new Promise((resolve) => {
-      video.onloadedmetadata = () => {
-        // Captures thumbnail at 1 second
-        video.currentTime = 1;
-      };
+  const video = document.createElement("video");
+  video.src = URL.createObjectURL(file);
+  alert(video.src);
+  return new Promise((resolve) => {
+    video.onloadedmetadata = () => {
+      // Captures thumbnail at 1 second
+      video.currentTime = 1;
+    };
 
-      video.onseeked = () => {
-        const canvas = document.createElement("canvas");
-        const ctx = canvas.getContext("2d");
+    video.onseeked = () => {
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
 
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
 
-        ctx?.drawImage(video, 0, 0, canvas.width, canvas.height);
+      ctx?.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-        const thumbnail = canvas.toDataURL("image/png");
+      const thumbnail = canvas.toDataURL("image/png");
 
-        resolve({
-          name: file.name,
-          thumbnail,
-          duration: video.duration,
-          videoUrl: video.src,
-        });
-      };
-    });
-  }
-  return {
-    name: file.name,
-    thumbnail: null,
-    duration: null,
-    videoUrl: file.name,
-  };
+      resolve({
+        name: file.name,
+        thumbnail,
+        duration: video.duration,
+        videoUrl: video.src,
+      });
+    };
+  });
 }
 
 async function fetchVideosInDb() {
@@ -129,7 +122,6 @@ export default function Dashboard() {
           if (entry.kind === "file") {
             // function these two lines
             const file = await entry.getFile();
-            alert(file.name + " " + file.type.startsWith("video/"));
             if (!file.type.startsWith("video/")) continue;
 
             // promise.all() the result of the previous function
