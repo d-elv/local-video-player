@@ -7,7 +7,6 @@ import { FormButton } from "../ui/shared/FormButton";
 import Link from "next/link";
 import { useActionState, useEffect, useRef } from "react";
 import { useToast } from "@/hooks/use-toast";
-import { revalidatePath } from "next/cache";
 
 export default function LoginPage() {
   const initialState = { success: false, message: "" };
