@@ -125,11 +125,11 @@ export default function Dashboard() {
 
             // promise.all() the result of the previous function
             const detail = await processFile(file);
+            alert(detail.name);
             details.push(detail);
           } else if (entry.kind === "directory") {
           }
         }
-        alert(details[0].name);
         setFileDetails(details);
 
         upsertToDb(details);
