@@ -35,6 +35,7 @@ async function processFile(file: File): Promise<{
       // Captures thumbnail at 1 second
       video.currentTime = 1;
     };
+    alert("Pre thumb " + video.src);
 
     video.onseeked = () => {
       const canvas = document.createElement("canvas");
