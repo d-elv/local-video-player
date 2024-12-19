@@ -1,26 +1,26 @@
 "use client";
 
 import { formatDuration } from "@/lib/formatters";
-// import { createClient } from "@/utils/supabase/client";
+import { createClient } from "@/utils/supabase/client";
 import Link from "next/link";
 import { useFileDetails } from "../contexts/FileDetailsContext";
 import { showDirectoryPicker } from "file-system-access";
 
-// type VideoInfo = {
-//   name: string;
-//   thumbnail: string | null;
-//   duration: number | null;
-//   videoUrl: string;
-// };
+type VideoInfo = {
+  name: string;
+  thumbnail: string | null;
+  duration: number | null;
+  videoUrl: string;
+};
 
-// type VideoInfoFromDb = {
-//   id: string;
-//   user_id: string;
-//   file_name: string;
-//   thumbnail: string;
-//   progress: number;
-//   duration: number;
-// };
+type VideoInfoFromDb = {
+  id: string;
+  user_id: string;
+  file_name: string;
+  thumbnail: string;
+  progress: number;
+  duration: number;
+};
 
 async function processFile(file: File): Promise<{
   name: string;
@@ -65,57 +65,56 @@ async function processFile(file: File): Promise<{
   };
 }
 
-// async function fetchVideosInDb() {
-//   const supabase = createClient();
-//   const { data } = await supabase.from("videos").select();
-//   return data;
-// }
+async function fetchVideosInDb() {
+  const supabase = createClient();
+  const { data } = await supabase.from("videos").select();
+  return data;
+}
 
-// async function upsertToDb(videoDetails: VideoInfo[]) {
-//   const supabase = createClient();
+async function upsertToDb(videoDetails: VideoInfo[]) {
+  const supabase = createClient();
 
-//   const videosInDb = await fetchVideosInDb();
+  const videosInDb = await fetchVideosInDb();
 
-//   const { data } = await supabase
-//     .from("videos")
-//     .upsert(
-//       videoDetails.map((detail) => {
-//         if (videosInDb !== null) {
-//           const matchingVideo = videosInDb.filter(
-//             (video: VideoInfoFromDb) => video.id === detail.name
-//           );
-//           if (matchingVideo.length === 0) {
-//             return {
-//               id: detail.name,
-//               file_name: detail.name,
-//               thumbnail: detail.thumbnail,
-//               progress: 0,
-//               duration: detail.duration,
-//             };
-//           } else {
-//             const matchingVideoProgress: VideoInfoFromDb = matchingVideo[0];
-//             return {
-//               id: detail.name,
-//               file_name: detail.name,
-//               thumbnail: detail.thumbnail,
-//               progress: matchingVideoProgress.progress,
-//               duration: detail.duration,
-//             };
-//           }
-//         }
-//       })
-//     )
-//     .select();
+  const { data } = await supabase
+    .from("videos")
+    .upsert(
+      videoDetails.map((detail) => {
+        if (videosInDb !== null) {
+          const matchingVideo = videosInDb.filter(
+            (video: VideoInfoFromDb) => video.id === detail.name
+          );
+          if (matchingVideo.length === 0) {
+            return {
+              id: detail.name,
+              file_name: detail.name,
+              thumbnail: detail.thumbnail,
+              progress: 0,
+              duration: detail.duration,
+            };
+          } else {
+            const matchingVideoProgress: VideoInfoFromDb = matchingVideo[0];
+            return {
+              id: detail.name,
+              file_name: detail.name,
+              thumbnail: detail.thumbnail,
+              progress: matchingVideoProgress.progress,
+              duration: detail.duration,
+            };
+          }
+        }
+      })
+    )
+    .select();
 
-//   if (data) {
-//   }
-// }
+  if (data) {
+  }
+}
 
 export default function Dashboard() {
   const { fileDetails, setFileDetails } = useFileDetails();
 
   const handleFolderSelect = async () => {
-    // if ("showDirectoryPicker" in window) {
     const showPicker = async () => {
       try {
         const handle = await showDirectoryPicker();
@@ -127,6 +126,7 @@ export default function Dashboard() {
         }[] = [];
 
         for await (const entry of handle.values()) {
+          alert(entry.name);
           if (entry.kind === "file") {
             // function these two lines
             const file = await entry.getFile();
@@ -140,39 +140,13 @@ export default function Dashboard() {
         }
         setFileDetails(details);
 
-        // upsertToDb(details);
-      } catch (e) {
-        console.log(e);
+        upsertToDb(details);
+      } catch (error) {
+        console.error(error);
+        alert("This device does not support directory picking");
       }
     };
     showPicker();
-    // try {
-    //   const directoryHandle = await window.showDirectoryPicker();
-    //   const details: {
-    //     name: string;
-    //     thumbnail: string | null;
-    //     duration: number | null;
-    //     videoUrl: string;
-    //   }[] = [];
-
-    //   for await (const entry of directoryHandle.values()) {
-    //     if (entry.kind === "file") {
-    //       // function these two lines
-    //       const file = await entry.getFile();
-    //       if (!file.type.startsWith("video/")) continue;
-
-    //       // promise.all() the result of the previous function
-    //       const detail = await processFile(file);
-    //       details.push(detail);
-    //     } else if (entry.kind === "directory") {
-    //     }
-    //   }
-    //   setFileDetails(details);
-
-    //   upsertToDb(details);
-    // } catch (error) {
-    //   console.error("Error while accessing the directory:", error);
-    // }
   };
   return (
     <main>
