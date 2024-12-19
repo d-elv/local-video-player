@@ -126,7 +126,7 @@ export default function Dashboard() {
         }[] = [];
 
         for await (const entry of handle.values()) {
-          alert(entry.name);
+          alert(entry.kind);
           if (entry.kind === "file") {
             // function these two lines
             const file = await entry.getFile();
