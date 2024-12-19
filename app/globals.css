@@ -4,6 +4,7 @@
 
 html {
   --background: 228, 11%, 92%; /* Light neutral */
+  --background-hover: 228, 11%, 82%;
   --foreground: 210, 15%, 20%; /* Dark gray */
   --primary: 14, 75%, 50%; /* #CA3F2E - Red */
   --primary-foreground: 210, 15%, 10%; /* Dark Grey */
@@ -62,7 +63,7 @@ input:focus {
   outline-offset: 0 !important;
 }
 
-@layer base {
+/* @layer base {
   :root {
     --background: 0 0% 100%;
     --foreground: 0 0% 3.9%;
@@ -125,4 +126,4 @@ input:focus {
   body {
     @apply bg-background text-foreground;
   }
-}
+} */

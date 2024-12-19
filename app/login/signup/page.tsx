@@ -5,7 +5,7 @@ import { signUp } from "../actions";
 import { redirect } from "next/navigation";
 import { FormButton } from "../../ui/shared/FormButton";
 import Link from "next/link";
-import { useActionState, useEffect, useState } from "react";
+import { useActionState, useEffect, useRef, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 
 export default function SignupPage() {
@@ -17,6 +17,7 @@ export default function SignupPage() {
     initialState
   );
   const { toast } = useToast();
+  const emailRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     console.log("password:", password);
@@ -47,6 +48,9 @@ export default function SignupPage() {
       }
     }
     redirectSignedInUser();
+    if (emailRef.current) {
+      emailRef.current.focus();
+    }
   }, []);
 
   return (
@@ -62,8 +66,9 @@ export default function SignupPage() {
           id="email"
           name="email"
           type="email"
+          ref={emailRef}
           required
-          className="bg-background-hover text-primary-foreground font-sans rounded-md mt-1 p-1 pl-2"
+          className="bg-background text-primary-foreground font-sans rounded-md mt-1 p-1 pl-2"
         />
         <label htmlFor="password" className="text-sm mt-2">
           Password
@@ -78,7 +83,7 @@ export default function SignupPage() {
           value={password}
           min={6}
           required
-          className="bg-background-hover text-primary-foreground font-sans rounded-md p-1 pl-2"
+          className="bg-background text-primary-foreground font-sans rounded-md p-1 pl-2"
         />
         <label htmlFor="password" className="text-sm mt-2">
           Confirm Password
@@ -93,7 +98,7 @@ export default function SignupPage() {
           value={confirm}
           min={6}
           required
-          className="bg-background-hover text-primary-foreground font-sans rounded-md p-1 pl-2"
+          className="bg-background text-primary-foreground font-sans rounded-md p-1 pl-2"
         />
         <div className="flex flex-row justify-between items-center mt-4">
           <FormButton formAction={signupAction} disabled={isPending}>

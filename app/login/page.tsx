@@ -5,7 +5,7 @@ import { login } from "./actions";
 import { redirect } from "next/navigation";
 import { FormButton } from "../ui/shared/FormButton";
 import Link from "next/link";
-import { useActionState, useEffect } from "react";
+import { useActionState, useEffect, useRef } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { revalidatePath } from "next/cache";
 
@@ -16,6 +16,7 @@ export default function LoginPage() {
     initialState
   );
   const { toast } = useToast();
+  const emailRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     async function redirectSignedInUser() {
@@ -28,6 +29,9 @@ export default function LoginPage() {
       }
     }
     redirectSignedInUser();
+    if (emailRef.current !== null) {
+      emailRef.current.focus();
+    }
   }, []);
 
   useEffect(() => {
@@ -36,7 +40,6 @@ export default function LoginPage() {
         title: "Login Successful",
         description: response.message,
       });
-      revalidatePath("/dashboard", "layout");
       redirect("/dashboard");
     } else if (response.success === false && response.message !== "") {
       toast({
@@ -61,8 +64,9 @@ export default function LoginPage() {
           id="email"
           name="email"
           type="email"
+          ref={emailRef}
           required
-          className="bg-background-hover text-primary-foreground font-sans rounded-md mt-1 p-1 pl-2 "
+          className="bg-background text-primary-foreground font-sans rounded-md mt-1 p-1 pl-2 "
         />
         <label htmlFor="password" className="text-sm mt-2">
           Password
@@ -72,7 +76,7 @@ export default function LoginPage() {
           name="password"
           type="password"
           required
-          className="bg-background-hover text-primary-foreground font-sans rounded-md p-1 pl-2"
+          className="bg-background text-primary-foreground font-sans rounded-md p-1 pl-2"
         />
         <div className="flex flex-row justify-between items-center mt-4">
           <FormButton type="submit" disabled={isPending}>
