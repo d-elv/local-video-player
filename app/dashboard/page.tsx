@@ -4,6 +4,7 @@ import { formatDuration } from "@/lib/formatters";
 import { createClient } from "@/utils/supabase/client";
 import Link from "next/link";
 import { useFileDetails } from "../contexts/FileDetailsContext";
+import { showDirectoryPicker } from "file-system-access";
 
 type VideoInfo = {
   name: string;
@@ -114,9 +115,10 @@ export default function Dashboard() {
   const { fileDetails, setFileDetails } = useFileDetails();
 
   const handleFolderSelect = async () => {
-    if ("showDirectoryPicker" in window) {
+    // if ("showDirectoryPicker" in window) {
+    const showPicker = async () => {
       try {
-        const directoryHandle = await window.showDirectoryPicker();
+        const handle = await showDirectoryPicker();
         const details: {
           name: string;
           thumbnail: string | null;
@@ -124,7 +126,7 @@ export default function Dashboard() {
           videoUrl: string;
         }[] = [];
 
-        for await (const entry of directoryHandle.values()) {
+        for await (const entry of handle.values()) {
           if (entry.kind === "file") {
             // function these two lines
             const file = await entry.getFile();
@@ -138,14 +140,39 @@ export default function Dashboard() {
         }
         setFileDetails(details);
 
-        upsertToDb(details);
-      } catch (error) {
-        console.error("Error while accessing the directory:", error);
+        // upsertToDb(details);
+      } catch (e) {
+        console.log(e);
       }
-    } else {
-      // TODO: Add Focus and show option for input dialog multiple file select
-      alert("Your browser does not support the File System Access API.");
-    }
+    };
+    showPicker();
+    // try {
+    //   const directoryHandle = await window.showDirectoryPicker();
+    //   const details: {
+    //     name: string;
+    //     thumbnail: string | null;
+    //     duration: number | null;
+    //     videoUrl: string;
+    //   }[] = [];
+
+    //   for await (const entry of directoryHandle.values()) {
+    //     if (entry.kind === "file") {
+    //       // function these two lines
+    //       const file = await entry.getFile();
+    //       if (!file.type.startsWith("video/")) continue;
+
+    //       // promise.all() the result of the previous function
+    //       const detail = await processFile(file);
+    //       details.push(detail);
+    //     } else if (entry.kind === "directory") {
+    //     }
+    //   }
+    //   setFileDetails(details);
+
+    //   upsertToDb(details);
+    // } catch (error) {
+    //   console.error("Error while accessing the directory:", error);
+    // }
   };
   return (
     <main>
