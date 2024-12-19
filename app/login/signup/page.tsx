@@ -23,10 +23,9 @@ export default function SignupPage() {
   const passwordType = passwordShown ? "text" : "password";
   const [confirmShown, setConfirmShown] = useState(false);
   const confirmType = confirmShown ? "text" : "password";
+  const [showMatchError, setShowMatchError] = useState(false);
 
   useEffect(() => {
-    console.log("password:", password);
-    console.log("confirm:", confirm);
     if (response.success) {
       toast({
         title: "Signup successful",
@@ -58,10 +57,20 @@ export default function SignupPage() {
     }
   }, []);
 
+  useEffect(() => {
+    setTimeout(() => {
+      if (password !== confirm) {
+        setShowMatchError(true);
+      } else {
+        setShowMatchError(false);
+      }
+    }, 1000);
+  }, [password, confirm]);
+
   return (
-    <div className="absolute top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%] flex justify-center items-center">
+    <div className="absolute top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%] flex justify-center items-center flex-col">
       <form
-        className="flex flex-col place-content-center rounded-lg border-gray-700 webk border-2 p-4 bg-secondary w-96"
+        className="flex flex-col place-content-center rounded-lg border-gray-700 webk border-2 p-4 bg-secondary w-96 z-50"
         key="signup-form"
       >
         <label htmlFor="email" className="text-sm">
@@ -123,6 +132,7 @@ export default function SignupPage() {
             {confirmShown ? <Eye /> : <EyeOff />}
           </button>
         </div>
+
         <div className="flex flex-row justify-between items-center mt-4">
           <FormButton formAction={signupAction} disabled={isPending}>
             Sign Up
@@ -135,6 +145,15 @@ export default function SignupPage() {
           </p>
         </div>
       </form>
+      <p
+        className={`text-red-700 mt-1 text-sm self-start absolute top-60 z-0 transition-all ease-in-out duration-300 ${
+          showMatchError
+            ? "opacity-100 translate-y-8"
+            : "opacity-0 translate-y-0"
+        }`}
+      >
+        Passwords must match
+      </p>
     </div>
   );
 }
