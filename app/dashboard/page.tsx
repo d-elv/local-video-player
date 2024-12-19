@@ -30,7 +30,6 @@ async function processFile(file: File): Promise<{
 }> {
   const video = document.createElement("video");
   video.src = URL.createObjectURL(file);
-  alert(video.src);
   return new Promise((resolve) => {
     video.onloadedmetadata = () => {
       // Captures thumbnail at 1 second
@@ -130,6 +129,7 @@ export default function Dashboard() {
           } else if (entry.kind === "directory") {
           }
         }
+        alert(details[0].name);
         setFileDetails(details);
 
         upsertToDb(details);
