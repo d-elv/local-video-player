@@ -35,7 +35,7 @@ async function processFile(file: File): Promise<{
       // Captures thumbnail at 1 second
       video.currentTime = 1;
     };
-    alert("Pre thumb " + video.src);
+    // alert("Pre thumb " + video.src); - this guy works on iOS
 
     video.onseeked = () => {
       const canvas = document.createElement("canvas");
@@ -46,7 +46,7 @@ async function processFile(file: File): Promise<{
 
       ctx?.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-      const thumbnail = canvas.toDataURL("image/png");
+      const thumbnail = canvas.toDataURL("image/webp", 0.5);
 
       alert(thumbnail);
       resolve({
