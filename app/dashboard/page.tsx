@@ -37,6 +37,10 @@ async function processFile(file: File): Promise<{
     };
     // alert("Pre thumb " + video.src); - this guy works on iOS
 
+    video.addEventListener("seeked", (event) => {
+      alert("event listener " + event.target);
+    });
+
     video.onseeked = () => {
       const canvas = document.createElement("canvas");
       const ctx = canvas.getContext("2d");
@@ -48,7 +52,7 @@ async function processFile(file: File): Promise<{
       alert(canvas.width);
       const thumbnail = canvas.toDataURL("image/webp", 0.5);
 
-      alert(thumbnail);
+      // alert(thumbnail);
       resolve({
         name: file.name,
         thumbnail,
