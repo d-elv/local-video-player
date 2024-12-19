@@ -126,10 +126,10 @@ export default function Dashboard() {
         }[] = [];
 
         for await (const entry of handle.values()) {
-          alert(entry.kind);
           if (entry.kind === "file") {
             // function these two lines
             const file = await entry.getFile();
+            alert(file.name + " " + file.type.startsWith("video/"));
             if (!file.type.startsWith("video/")) continue;
 
             // promise.all() the result of the previous function
