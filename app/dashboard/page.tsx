@@ -45,7 +45,7 @@ async function processFile(file: File): Promise<{
       canvas.height = video.videoHeight;
 
       ctx?.drawImage(video, 0, 0, canvas.width, canvas.height);
-
+      alert(canvas.width);
       const thumbnail = canvas.toDataURL("image/webp", 0.5);
 
       alert(thumbnail);
