@@ -5,8 +5,9 @@ import { login } from "./actions";
 import { redirect } from "next/navigation";
 import { FormButton } from "../ui/shared/FormButton";
 import Link from "next/link";
-import { useActionState, useEffect, useRef } from "react";
+import { useActionState, useEffect, useRef, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
+import { EyeOff, Eye } from "lucide-react";
 
 export default function LoginPage() {
   const initialState = { success: false, message: "" };
@@ -16,6 +17,8 @@ export default function LoginPage() {
   );
   const { toast } = useToast();
   const emailRef = useRef<HTMLInputElement | null>(null);
+  const [passwordShown, setPasswordShown] = useState(false);
+  const passwordType = passwordShown ? "text" : "password";
 
   useEffect(() => {
     async function redirectSignedInUser() {
@@ -70,13 +73,22 @@ export default function LoginPage() {
         <label htmlFor="password" className="text-sm mt-2">
           Password
         </label>
-        <input
-          id="password"
-          name="password"
-          type="password"
-          required
-          className="bg-background text-primary-foreground font-sans rounded-md p-1 pl-2"
-        />
+        <div className="bg-background rounded-md flex items-center justify-between">
+          <input
+            id="password"
+            name="password"
+            type={passwordType}
+            required
+            className="bg-background text-primary-foreground w-full font-sans pl-2 p-1 rounded-md"
+          />
+          <button
+            onClick={() => setPasswordShown(!passwordShown)}
+            type="button"
+            className="pr-2 w-fit"
+          >
+            {passwordShown ? <Eye /> : <EyeOff />}
+          </button>
+        </div>
         <div className="flex flex-row justify-between items-center mt-4">
           <FormButton type="submit" disabled={isPending}>
             Log in

@@ -7,6 +7,7 @@ import { FormButton } from "../../ui/shared/FormButton";
 import Link from "next/link";
 import { useActionState, useEffect, useRef, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
+import { EyeOff, Eye } from "lucide-react";
 
 export default function SignupPage() {
   const [password, setPassword] = useState("");
@@ -18,6 +19,10 @@ export default function SignupPage() {
   );
   const { toast } = useToast();
   const emailRef = useRef<HTMLInputElement | null>(null);
+  const [passwordShown, setPasswordShown] = useState(false);
+  const passwordType = passwordShown ? "text" : "password";
+  const [confirmShown, setConfirmShown] = useState(false);
+  const confirmType = confirmShown ? "text" : "password";
 
   useEffect(() => {
     console.log("password:", password);
@@ -73,33 +78,51 @@ export default function SignupPage() {
         <label htmlFor="password" className="text-sm mt-2">
           Password
         </label>
-        <input
-          id="password"
-          name="password"
-          type="password"
-          onChange={(event) => {
-            setPassword(event.target.value);
-          }}
-          value={password}
-          min={6}
-          required
-          className="bg-background text-primary-foreground font-sans rounded-md p-1 pl-2"
-        />
+        <div className="bg-background rounded-md flex items-center justify-between">
+          <input
+            id="password"
+            name="password"
+            type={passwordType}
+            onChange={(event) => {
+              setPassword(event.target.value);
+            }}
+            value={password}
+            min={6}
+            required
+            className="bg-background text-primary-foreground w-full font-sans p-1 pl-2 rounded-md"
+          />
+          <button
+            onClick={() => setPasswordShown(!passwordShown)}
+            type="button"
+            className="pr-2 w-fit"
+          >
+            {passwordShown ? <Eye /> : <EyeOff />}
+          </button>
+        </div>
         <label htmlFor="password" className="text-sm mt-2">
           Confirm Password
         </label>
-        <input
-          id="confirm"
-          name="confirm"
-          type="password"
-          onChange={(event) => {
-            setConfirm(event.target.value);
-          }}
-          value={confirm}
-          min={6}
-          required
-          className="bg-background text-primary-foreground font-sans rounded-md p-1 pl-2"
-        />
+        <div className="bg-background rounded-md flex items-center justify-between">
+          <input
+            id="confirm"
+            name="confirm"
+            type={confirmType}
+            onChange={(event) => {
+              setConfirm(event.target.value);
+            }}
+            value={confirm}
+            min={6}
+            required
+            className="bg-background text-primary-foreground w-full font-sans rounded-md p-1 pl-2"
+          />
+          <button
+            onClick={() => setConfirmShown(!confirmShown)}
+            type="button"
+            className="pr-2 w-fit"
+          >
+            {confirmShown ? <Eye /> : <EyeOff />}
+          </button>
+        </div>
         <div className="flex flex-row justify-between items-center mt-4">
           <FormButton formAction={signupAction} disabled={isPending}>
             Sign Up
