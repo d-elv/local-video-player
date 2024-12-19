@@ -54,6 +54,9 @@ async function processFile(file: File): Promise<{
         videoUrl: video.src,
       });
     };
+    video.onerror = () => {
+      alert("Video rejected " + file.name);
+    };
   });
 }
 
