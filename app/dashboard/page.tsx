@@ -4,6 +4,8 @@ import { formatDuration } from "@/lib/formatters";
 import { createClient } from "@/utils/supabase/client";
 import Link from "next/link";
 import { useFileDetails } from "../contexts/FileDetailsContext";
+import { showDirectoryPicker } from "file-system-access";
+import { useEffect } from "react";
 
 type VideoInfo = {
   name: string;
@@ -27,41 +29,35 @@ async function processFile(file: File): Promise<{
   duration: number | null;
   videoUrl: string;
 }> {
-  if (file.type.startsWith("video/")) {
-    const video = document.createElement("video");
-    video.src = URL.createObjectURL(file);
-    return new Promise((resolve) => {
-      video.onloadedmetadata = () => {
-        // Captures thumbnail at 1 second
-        video.currentTime = 1;
-      };
+  const video = document.createElement("video");
+  video.src = URL.createObjectURL(file);
+  return new Promise((resolve) => {
+    video.onloadedmetadata = () => {
+      // Captures thumbnail at 1 second
+      video.currentTime = 1;
+    };
 
-      video.onseeked = () => {
-        const canvas = document.createElement("canvas");
-        const ctx = canvas.getContext("2d");
+    video.onseeked = () => {
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
 
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
 
-        ctx?.drawImage(video, 0, 0, canvas.width, canvas.height);
+      ctx?.drawImage(video, 0, 0, canvas.width, canvas.height);
+      const thumbnail = canvas.toDataURL("image/webp", 0.5);
 
-        const thumbnail = canvas.toDataURL("image/png");
-
-        resolve({
-          name: file.name,
-          thumbnail,
-          duration: video.duration,
-          videoUrl: video.src,
-        });
-      };
-    });
-  }
-  return {
-    name: file.name,
-    thumbnail: null,
-    duration: null,
-    videoUrl: file.name,
-  };
+      resolve({
+        name: file.name,
+        thumbnail,
+        duration: video.duration,
+        videoUrl: video.src,
+      });
+    };
+    video.onerror = () => {
+      alert("Video rejected " + file.name);
+    };
+  });
 }
 
 async function fetchVideosInDb() {
@@ -113,10 +109,20 @@ async function upsertToDb(videoDetails: VideoInfo[]) {
 export default function Dashboard() {
   const { fileDetails, setFileDetails } = useFileDetails();
 
+  useEffect(() => {
+    function iPhoneDetector() {
+      if (window.navigator.userAgent.includes("iPhone")) {
+        alert("We have detected you are on an iPhone");
+        alert("Please expect this app not to function correctly");
+      }
+    }
+    iPhoneDetector();
+  }, []);
+
   const handleFolderSelect = async () => {
-    if ("showDirectoryPicker" in window) {
+    const showPicker = async () => {
       try {
-        const directoryHandle = await window.showDirectoryPicker();
+        const handle = await showDirectoryPicker();
         const details: {
           name: string;
           thumbnail: string | null;
@@ -124,7 +130,7 @@ export default function Dashboard() {
           videoUrl: string;
         }[] = [];
 
-        for await (const entry of directoryHandle.values()) {
+        for await (const entry of handle.values()) {
           if (entry.kind === "file") {
             // function these two lines
             const file = await entry.getFile();
@@ -140,12 +146,11 @@ export default function Dashboard() {
 
         upsertToDb(details);
       } catch (error) {
-        console.error("Error while accessing the directory:", error);
+        console.error(error);
+        alert("This device does not support directory picking");
       }
-    } else {
-      // TODO: Add Focus and show option for input dialog multiple file select
-      alert("Your browser does not support the File System Access API.");
-    }
+    };
+    showPicker();
   };
   return (
     <main>
