@@ -115,9 +115,6 @@ async function upsertToDb(videoDetails: VideoInfo[]) {
 export default function Dashboard() {
   const { fileDetails, setFileDetails } = useFileDetails();
   // alert(window.navigator);
-  if (window.navigator) {
-    alert(window.navigator?.userAgent);
-  }
 
   const handleFolderSelect = async () => {
     const showPicker = async () => {
@@ -129,6 +126,9 @@ export default function Dashboard() {
           duration: number | null;
           videoUrl: string;
         }[] = [];
+        if (window.navigator) {
+          alert(window.navigator?.userAgent);
+        }
 
         for await (const entry of handle.values()) {
           if (entry.kind === "file") {
