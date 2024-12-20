@@ -35,11 +35,6 @@ async function processFile(file: File): Promise<{
       // Captures thumbnail at 1 second
       video.currentTime = 1;
     };
-    // alert("Pre thumb " + video.src); - this guy works on iOS
-
-    video.addEventListener("seeked", (event) => {
-      alert("event listener " + event.target);
-    });
 
     video.onseeked = () => {
       const canvas = document.createElement("canvas");
@@ -49,10 +44,8 @@ async function processFile(file: File): Promise<{
       canvas.height = video.videoHeight;
 
       ctx?.drawImage(video, 0, 0, canvas.width, canvas.height);
-      alert(canvas.width);
       const thumbnail = canvas.toDataURL("image/webp", 0.5);
 
-      // alert(thumbnail);
       resolve({
         name: file.name,
         thumbnail,
@@ -114,7 +107,6 @@ async function upsertToDb(videoDetails: VideoInfo[]) {
 
 export default function Dashboard() {
   const { fileDetails, setFileDetails } = useFileDetails();
-  // alert(window.navigator);
 
   const handleFolderSelect = async () => {
     const showPicker = async () => {
@@ -126,8 +118,9 @@ export default function Dashboard() {
           duration: number | null;
           videoUrl: string;
         }[] = [];
-        if (window.navigator) {
-          alert(window.navigator?.userAgent);
+        if (window.navigator.userAgent.includes("iPhone")) {
+        }
+        if (window.navigator.userAgent.includes("iPad")) {
         }
 
         for await (const entry of handle.values()) {
@@ -138,7 +131,6 @@ export default function Dashboard() {
 
             // promise.all() the result of the previous function
             const detail = await processFile(file);
-            alert(detail.name);
             details.push(detail);
           } else if (entry.kind === "directory") {
           }
