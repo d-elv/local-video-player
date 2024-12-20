@@ -113,7 +113,7 @@ export default function Dashboard() {
     function iPhoneDetector() {
       if (window.navigator.userAgent.includes("iPhone")) {
         alert("We have detected you are on an iPhone");
-        alert("Please expect this app not to function");
+        alert("Please expect this app not to function correctly");
       }
     }
     iPhoneDetector();
