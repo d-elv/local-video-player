@@ -5,6 +5,7 @@ import { createClient } from "@/utils/supabase/client";
 import Link from "next/link";
 import { useFileDetails } from "../contexts/FileDetailsContext";
 import { showDirectoryPicker } from "file-system-access";
+import { useEffect } from "react";
 
 type VideoInfo = {
   name: string;
@@ -108,6 +109,16 @@ async function upsertToDb(videoDetails: VideoInfo[]) {
 export default function Dashboard() {
   const { fileDetails, setFileDetails } = useFileDetails();
 
+  useEffect(() => {
+    function iPhoneDetector() {
+      if (window.navigator.userAgent.includes("iPhone")) {
+        alert("We have detected you are on an iPhone");
+        alert("Please expect this app not to function");
+      }
+    }
+    iPhoneDetector();
+  }, []);
+
   const handleFolderSelect = async () => {
     const showPicker = async () => {
       try {
@@ -118,10 +129,6 @@ export default function Dashboard() {
           duration: number | null;
           videoUrl: string;
         }[] = [];
-        if (window.navigator.userAgent.includes("iPhone")) {
-        }
-        if (window.navigator.userAgent.includes("iPad")) {
-        }
 
         for await (const entry of handle.values()) {
           if (entry.kind === "file") {
