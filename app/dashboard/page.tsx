@@ -130,20 +130,26 @@ export default function Dashboard() {
           videoUrl: string;
         }[] = [];
 
-        for await (const entry of handle.values()) {
-          if (entry.kind === "file") {
-            // function these two lines
-            const file = await entry.getFile();
-            if (!file.type.startsWith("video/")) continue;
-
-            // promise.all() the result of the previous function
-            const detail = await processFile(file);
-            details.push(detail);
-          } else if (entry.kind === "directory") {
+        async function getFiles(handle: FileSystemDirectoryHandle) {
+          const filesToProcess = [];
+          for await (const entry of handle.values()) {
+            if (entry.kind === "file") {
+              const file = await entry.getFile();
+              if (!file.type.startsWith("video/")) continue;
+              filesToProcess.push(file);
+            }
           }
+          return filesToProcess;
         }
-        setFileDetails(details);
+        const filesToProcess = await getFiles(handle);
 
+        await Promise.all(
+          filesToProcess.map(async (file) => {
+            details.push(await processFile(file));
+          })
+        );
+
+        setFileDetails(details);
         upsertToDb(details);
       } catch (error) {
         console.error(error);
