@@ -50,7 +50,7 @@ export default function LoginPage() {
         description: response.message,
       });
     }
-  }, [response]);
+  }, [response, toast]);
 
   return (
     <div className="absolute top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%] flex flex-col justify-center items-center">

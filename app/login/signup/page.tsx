@@ -39,7 +39,7 @@ export default function SignupPage() {
         description: response.message,
       });
     }
-  }, [response]);
+  }, [response, toast]);
 
   useEffect(() => {
     async function redirectSignedInUser() {
