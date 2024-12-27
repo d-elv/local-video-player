@@ -76,10 +76,11 @@ async function upsertToDb(videoDetails: VideoInfo[]) {
     .upsert(
       videoDetails.map((detail) => {
         if (videosInDb !== null) {
-          const matchingVideo = videosInDb.filter(
+          const matchingVideos = videosInDb.filter(
             (video: VideoInfoFromDb) => video.id === detail.name
           );
-          if (matchingVideo.length === 0) {
+          if (matchingVideos.length === 0) {
+            // Inserts into db as new entry
             return {
               id: detail.name,
               file_name: detail.name,
@@ -88,12 +89,13 @@ async function upsertToDb(videoDetails: VideoInfo[]) {
               duration: detail.duration,
             };
           } else {
-            const matchingVideoProgress: VideoInfoFromDb = matchingVideo[0];
+            // Upserts to db without overwriting progress
+            const matchingVideo: VideoInfoFromDb = matchingVideos[0];
             return {
               id: detail.name,
               file_name: detail.name,
               thumbnail: detail.thumbnail,
-              progress: matchingVideoProgress.progress,
+              progress: matchingVideo.progress,
               duration: detail.duration,
             };
           }
