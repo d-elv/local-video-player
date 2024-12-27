@@ -73,6 +73,7 @@ export default function SignupPage() {
         className="flex flex-col place-content-center rounded-lg border-gray-700 webk border-2 p-4 bg-secondary w-96 z-50"
         key="signup-form"
       >
+        <h1 className="flex self-center font-bold mb-4 text-2xl">Signup</h1>
         <label htmlFor="email" className="text-sm">
           Email
         </label>
