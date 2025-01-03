@@ -119,10 +119,6 @@ export default function Dashboard() {
   const { fileDetails, setFileDetails } = useFileDetails();
 
   useEffect(() => {
-    console.log(fileDetails);
-  }, [fileDetails]);
-
-  useEffect(() => {
     function iPhoneDetector() {
       if (window.navigator.userAgent.includes("iPhone")) {
         alert("We have detected you are on an iPhone");
