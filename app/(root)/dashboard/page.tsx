@@ -5,7 +5,7 @@ import { createClient } from "@/app/utils/supabase/client";
 import Link from "next/link";
 import { useFileDetails } from "../../contexts/FileDetailsContext";
 import { showDirectoryPicker } from "file-system-access";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 type VideoInfo = {
   name: string;
@@ -14,14 +14,17 @@ type VideoInfo = {
   videoUrl: string;
 };
 
-type VideoInfoFromDb = {
+type VideoInfoFromDbWithUrl = {
   id: string;
   user_id: string;
   file_name: string;
   thumbnail: string;
   progress: number;
   duration: number;
+  videoUrl: string;
 };
+
+type VideoInfoFromDb = Omit<VideoInfoFromDbWithUrl, "videoUrl">;
 
 async function processFile(file: File): Promise<{
   name: string;
@@ -70,16 +73,20 @@ async function upsertToDb(videoDetails: VideoInfo[]) {
   const supabase = createClient();
 
   const videosInDb = await fetchVideosInDb();
+  const matchingVideosFromDb: VideoInfoFromDbWithUrl[] = [];
 
   const { data } = await supabase
     .from("videos")
     .upsert(
       videoDetails.map((detail) => {
         if (videosInDb !== null) {
-          const matchingVideos = videosInDb.filter(
+          // use .find instead of .filter?
+          let matchingVideo: VideoInfoFromDbWithUrl = videosInDb.find(
             (video: VideoInfoFromDb) => video.id === detail.name
           );
-          if (matchingVideos.length === 0) {
+          matchingVideo.videoUrl = detail.videoUrl;
+          matchingVideosFromDb.push(matchingVideo);
+          if (!matchingVideo) {
             // Inserts into db as new entry
             return {
               id: detail.name,
@@ -90,7 +97,6 @@ async function upsertToDb(videoDetails: VideoInfo[]) {
             };
           } else {
             // Upserts to db without overwriting progress
-            const matchingVideo: VideoInfoFromDb = matchingVideos[0];
             return {
               id: detail.name,
               file_name: detail.name,
@@ -106,6 +112,7 @@ async function upsertToDb(videoDetails: VideoInfo[]) {
 
   if (data) {
   }
+  return matchingVideosFromDb;
 }
 
 export default function Dashboard() {
@@ -151,8 +158,8 @@ export default function Dashboard() {
           })
         );
 
-        setFileDetails(details);
-        upsertToDb(details);
+        const pickedVideos = await upsertToDb(details);
+        setFileDetails(pickedVideos);
       } catch (error) {
         console.error(error);
         alert("This device does not support directory picking");
@@ -171,31 +178,38 @@ export default function Dashboard() {
 
       {fileDetails.length > 0 ? (
         <ul>
-          {fileDetails.map((file, index) => (
-            <li className="mt-2 bg-sky-300 rounded-lg" key={index}>
-              <Link
-                href={{
-                  pathname: `/dashboard/videos/${file.name}/watch`,
-                  query: { videoUrl: file.videoUrl },
-                }}
-                className="h-full flex items-center justify-start hover:bg-sky-400 rounded-lg transition-all"
-              >
-                {file.thumbnail ? (
-                  <img
-                    alt={`Thumbnail of video titled ${file.name}`}
-                    src={file.thumbnail}
-                    className="w-[102px] h-[72px] object-cover rounded-tl-lg rounded-bl-lg"
-                  />
-                ) : null}
-                <p className="text-black truncate ml-2 lg:ml-4">{file.name}</p>
-                {file.duration ? (
-                  <p className="text-black ml-auto mr-2 max-w-full lg:mr-4">
-                    {formatDuration(file.duration)}
+          {fileDetails.map((file, index) => {
+            return (
+              <li className="mt-2 bg-sky-300 rounded-lg" key={index}>
+                <Link
+                  href={{
+                    pathname: `/dashboard/videos/${file.file_name}/watch`,
+                    query: {
+                      videoUrl: file.videoUrl,
+                      progress: file.progress,
+                    },
+                  }}
+                  className="h-full flex items-center justify-start hover:bg-sky-400 rounded-lg transition-all"
+                >
+                  {file.thumbnail ? (
+                    <img
+                      alt={`Thumbnail of video titled ${file.file_name}`}
+                      src={file.thumbnail}
+                      className="w-[102px] h-[72px] object-cover rounded-tl-lg rounded-bl-lg"
+                    />
+                  ) : null}
+                  <p className="text-black truncate ml-2 lg:ml-4">
+                    {file.file_name}
                   </p>
-                ) : null}
-              </Link>
-            </li>
-          ))}
+                  {file.duration ? (
+                    <p className="text-black ml-auto mr-2 max-w-full lg:mr-4">
+                      {formatDuration(file.duration)}
+                    </p>
+                  ) : null}
+                </Link>
+              </li>
+            );
+          })}
         </ul>
       ) : (
         <p className="mt-2">Selected files will appear here</p>
