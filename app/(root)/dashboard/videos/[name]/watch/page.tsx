@@ -41,11 +41,26 @@ export default function Watch() {
         .select()
         .eq("id", videoName);
       if (data && data.length > 0) {
+        // console.log(data);
+        // console.log(error);
         setVideoDbInfo(data[0]);
         setLoading(false);
       } else {
         console.error("Error fetching video data from db: ", error);
       }
+      // if (data === null || data.length === 0) {
+      //   console.log(data);
+      //   console.error("Error fetching video data from db: ", error);
+      // setVideoDbInfo({
+      //   id: "0",
+      //   user_id: "a",
+      //   file_name: videoName,
+      //   thumbnail: "a",
+      //   progress: 0,
+      //   duration: 1,
+      // });
+      // setLoading(false);
+      // }
     }
 
     fetchVideoInfo();

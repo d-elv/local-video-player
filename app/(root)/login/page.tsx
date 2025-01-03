@@ -52,6 +52,24 @@ export default function LoginPage() {
     }
   }, [response, toast]);
 
+  async function signInAnonymously() {
+    const supabase = createClient();
+    const { data, error } = await supabase.auth.signInAnonymously();
+    if (data.user?.email === "") {
+      toast({
+        title: "Anonymous Sign in Successful",
+        description: "No video progress will be saved.",
+      });
+    }
+    if (error !== null) {
+      toast({
+        title: "Anonymous Sign in Unsuccessful",
+        description: "Please try again later, or signing up.",
+      });
+    }
+    redirect("/dashboard");
+  }
+
   return (
     <div className="absolute top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%] flex flex-col justify-center items-center">
       <form
@@ -101,7 +119,14 @@ export default function LoginPage() {
             </Link>
           </p>
         </div>
+        <p className="self-center font-bold text-lg mb-2">
+          ---------- <span className="text-base font-normal">or</span>{" "}
+          ----------
+        </p>
       </form>
+      <FormButton type="button" onClick={signInAnonymously}>
+        Sign In Anonymously
+      </FormButton>
     </div>
   );
 }
