@@ -24,6 +24,7 @@ export default function Watch() {
   const supabase = createClient();
   const searchParams = useSearchParams();
   const videoUrl = searchParams.get("videoUrl");
+  const progress = searchParams.get("progress");
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [videoDbInfo, setVideoDbInfo] = useState<videoInfoFromDb>();
   const [loading, setLoading] = useState(true);
@@ -71,30 +72,31 @@ export default function Watch() {
 
   useEffect(() => {
     // For setting the playback location of the video loaded.
-    if (videoDbInfo && videoRef.current) {
-      const video = videoRef.current;
-
-      const handleLoadedMetadata = () => {
-        video.currentTime = videoDbInfo!.progress;
-      };
-
-      if (video.readyState >= 1) {
-        video.currentTime = videoDbInfo.progress;
-      } else {
-        video.addEventListener("loadedmetadata", handleLoadedMetadata);
-      }
-
-      return () => {
-        video.removeEventListener("loadedmetadata", handleLoadedMetadata);
-      };
-    }
-  }, [videoDbInfo]);
+    // if (videoDbInfo && videoRef.current) {
+    //   const video = videoRef.current;
+    //   const handleLoadedMetadata = () => {
+    //     video.currentTime = videoDbInfo!.progress;
+    //   };
+    //   if (video.readyState >= 1) {
+    //     video.currentTime = progress;
+    //   } else {
+    //     video.addEventListener("loadedmetadata", handleLoadedMetadata);
+    //   }
+    //   return () => {
+    //     video.removeEventListener("loadedmetadata", handleLoadedMetadata);
+    //   };
+    // }
+  }, [videoRef]);
 
   return (
     <main>
       {!loading && videoUrl && videoDbInfo ? (
         <>
-          <Player style={{ display: "grid", width: "100%" }} ref={videoRef}>
+          <Player
+            style={{ display: "grid", width: "100%" }}
+            ref={videoRef}
+            currentTime={Number(progress)}
+          >
             <source src={videoUrl} type="video/mp4" />
           </Player>
         </>
