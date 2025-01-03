@@ -9,9 +9,23 @@ type VideoInfo = {
   videoUrl: string;
 };
 
+type VideoInfoFromDbWithUrl = {
+  id: string;
+  user_id: string;
+  file_name: string;
+  thumbnail: string;
+  progress: number;
+  duration: number;
+  videoUrl: string;
+};
+
+type VideoInfoFromDb = Omit<VideoInfoFromDbWithUrl, "videoUrl">;
+
 type FileDetailsContextType = {
-  fileDetails: VideoInfo[];
-  setFileDetails: React.Dispatch<React.SetStateAction<VideoInfo[]>>;
+  fileDetails: VideoInfoFromDbWithUrl[];
+  setFileDetails: React.Dispatch<
+    React.SetStateAction<VideoInfoFromDbWithUrl[]>
+  >;
 };
 
 type FileDetailsProviderProps = { children: React.ReactNode };
@@ -21,7 +35,7 @@ const FileDetailsContext = createContext<FileDetailsContextType | undefined>(
 );
 
 function FileDetailsProvider({ children }: FileDetailsProviderProps) {
-  const [fileDetails, setFileDetails] = useState<VideoInfo[]>([]);
+  const [fileDetails, setFileDetails] = useState<VideoInfoFromDbWithUrl[]>([]);
 
   return (
     <FileDetailsContext.Provider value={{ fileDetails, setFileDetails }}>

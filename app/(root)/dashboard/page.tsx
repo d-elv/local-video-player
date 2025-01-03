@@ -14,14 +14,17 @@ type VideoInfo = {
   videoUrl: string;
 };
 
-type VideoInfoFromDb = {
+type VideoInfoFromDbWithUrl = {
   id: string;
   user_id: string;
   file_name: string;
   thumbnail: string;
   progress: number;
   duration: number;
+  videoUrl: string;
 };
+
+type VideoInfoFromDb = Omit<VideoInfoFromDbWithUrl, "videoUrl">;
 
 async function processFile(file: File): Promise<{
   name: string;
@@ -70,7 +73,7 @@ async function upsertToDb(videoDetails: VideoInfo[]) {
   const supabase = createClient();
 
   const videosInDb = await fetchVideosInDb();
-  const matchingVideosFromDb: VideoInfoFromDb[] = [];
+  const matchingVideosFromDb: VideoInfoFromDbWithUrl[] = [];
 
   const { data } = await supabase
     .from("videos")
@@ -78,9 +81,10 @@ async function upsertToDb(videoDetails: VideoInfo[]) {
       videoDetails.map((detail) => {
         if (videosInDb !== null) {
           // use .find instead of .filter?
-          const matchingVideo: VideoInfoFromDb = videosInDb.find(
+          let matchingVideo: VideoInfoFromDbWithUrl = videosInDb.find(
             (video: VideoInfoFromDb) => video.id === detail.name
           );
+          matchingVideo.videoUrl = detail.videoUrl;
           matchingVideosFromDb.push(matchingVideo);
           if (!matchingVideo) {
             // Inserts into db as new entry
@@ -113,7 +117,6 @@ async function upsertToDb(videoDetails: VideoInfo[]) {
 
 export default function Dashboard() {
   const { fileDetails, setFileDetails } = useFileDetails();
-  const [chosenVideos, setChosenVideos] = useState<VideoInfoFromDb[]>();
 
   useEffect(() => {
     console.log(fileDetails);
@@ -159,9 +162,8 @@ export default function Dashboard() {
           })
         );
 
-        setFileDetails(details);
         const pickedVideos = await upsertToDb(details);
-        setChosenVideos(pickedVideos);
+        setFileDetails(pickedVideos);
       } catch (error) {
         console.error(error);
         alert("This device does not support directory picking");
@@ -181,30 +183,27 @@ export default function Dashboard() {
       {fileDetails.length > 0 ? (
         <ul>
           {fileDetails.map((file, index) => {
-            const currentFile = chosenVideos?.find(
-              (video) => video.file_name === file.name
-            );
             return (
               <li className="mt-2 bg-sky-300 rounded-lg" key={index}>
                 <Link
                   href={{
-                    pathname: `/dashboard/videos/${file.name}/watch`,
+                    pathname: `/dashboard/videos/${file.file_name}/watch`,
                     query: {
                       videoUrl: file.videoUrl,
-                      progress: currentFile?.progress || 0,
+                      progress: file.progress,
                     },
                   }}
                   className="h-full flex items-center justify-start hover:bg-sky-400 rounded-lg transition-all"
                 >
                   {file.thumbnail ? (
                     <img
-                      alt={`Thumbnail of video titled ${file.name}`}
+                      alt={`Thumbnail of video titled ${file.file_name}`}
                       src={file.thumbnail}
                       className="w-[102px] h-[72px] object-cover rounded-tl-lg rounded-bl-lg"
                     />
                   ) : null}
                   <p className="text-black truncate ml-2 lg:ml-4">
-                    {file.name}
+                    {file.file_name}
                   </p>
                   {file.duration ? (
                     <p className="text-black ml-auto mr-2 max-w-full lg:mr-4">
