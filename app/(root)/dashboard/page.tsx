@@ -80,7 +80,6 @@ async function upsertToDb(videoDetails: VideoInfo[]) {
     .upsert(
       videoDetails.map((detail) => {
         if (videosInDb !== null) {
-          // use .find instead of .filter?
           let matchingVideo: VideoInfoFromDbWithUrl = videosInDb.find(
             (video: VideoInfoFromDb) => video.id === detail.name
           );
@@ -157,12 +156,11 @@ export default function Dashboard() {
             details.push(await processFile(file));
           })
         );
-
         const pickedVideos = await upsertToDb(details);
         setFileDetails(pickedVideos);
       } catch (error) {
         console.error(error);
-        alert("This device does not support directory picking");
+        alert("This device may not support directory picking");
       }
     };
     showPicker();
