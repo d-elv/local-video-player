@@ -3,11 +3,30 @@
 import { formatDuration } from "@/app/utils/general/formatters";
 import Link from "next/link";
 import { useFileDetails } from "../../contexts/FileDetailsContext";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { HandleFolderSelectDb } from "@/app/components/ui/shared/HandleFolderSelectDb";
+import { createClient } from "@/app/utils/supabase/client";
 
 export default function Dashboard() {
   const { fileDetails, setFileDetails } = useFileDetails();
+  const [sessionWithEmail, setSessionWithEmail] = useState(true);
+
+  useEffect(() => {
+    async function checkSession() {
+      const supabase = createClient();
+      const { data, error } = await supabase.auth.getSession();
+      if (error) {
+        console.log(error);
+      }
+
+      if (data.session?.user.email) {
+        setSessionWithEmail(true);
+      } else {
+        setSessionWithEmail(false);
+      }
+    }
+    checkSession();
+  }, []);
 
   useEffect(() => {
     function iPhoneDetector() {
@@ -21,7 +40,11 @@ export default function Dashboard() {
 
   return (
     <main>
-      <HandleFolderSelectDb setFileDetails={setFileDetails} />
+      {sessionWithEmail ? (
+        <HandleFolderSelectDb setFileDetails={setFileDetails} />
+      ) : (
+        ""
+      )}
 
       {fileDetails.length > 0 ? (
         <ul>
