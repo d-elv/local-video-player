@@ -2,7 +2,7 @@
 
 import { notFound, usePathname, useSearchParams } from "next/navigation";
 import Player from "next-video/player";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { createClient } from "@/app/utils/supabase/client";
 
 // import { Metadata } from "next";
@@ -11,46 +11,18 @@ import { createClient } from "@/app/utils/supabase/client";
 //   title: "Watch",
 // };
 
-type videoInfoFromDb = {
-  id: string;
-  user_id: string;
-  file_name: string;
-  thumbnail: string;
-  progress: number;
-  duration: number;
-};
-
 export default function Watch() {
   const supabase = createClient();
   const searchParams = useSearchParams();
   const videoUrl = searchParams.get("videoUrl");
   const progress = searchParams.get("progress");
   const videoRef = useRef<HTMLVideoElement | null>(null);
-  const [videoDbInfo, setVideoDbInfo] = useState<videoInfoFromDb>();
-  const [loading, setLoading] = useState(true);
   const pathname = usePathname();
   const videoName = pathname.split("/")[3];
 
   if (!videoUrl) {
     notFound();
   }
-
-  useLayoutEffect(() => {
-    async function fetchVideoInfo() {
-      const { data, error } = await supabase
-        .from("videos")
-        .select()
-        .eq("id", videoName);
-      if (data && data.length > 0) {
-        setVideoDbInfo(data[0]);
-        setLoading(false);
-      } else {
-        console.error("Error fetching video data from db: ", error);
-      }
-    }
-
-    fetchVideoInfo();
-  }, [supabase, videoName]);
 
   useEffect(() => {
     async function updateProgress() {
@@ -64,33 +36,14 @@ export default function Watch() {
         }
       }
     }
-
     const intervalId = setInterval(updateProgress, 5000);
 
     return () => clearInterval(intervalId);
   }, [supabase, videoName]);
 
-  useEffect(() => {
-    // For setting the playback location of the video loaded.
-    // if (videoDbInfo && videoRef.current) {
-    //   const video = videoRef.current;
-    //   const handleLoadedMetadata = () => {
-    //     video.currentTime = videoDbInfo!.progress;
-    //   };
-    //   if (video.readyState >= 1) {
-    //     video.currentTime = progress;
-    //   } else {
-    //     video.addEventListener("loadedmetadata", handleLoadedMetadata);
-    //   }
-    //   return () => {
-    //     video.removeEventListener("loadedmetadata", handleLoadedMetadata);
-    //   };
-    // }
-  }, [videoRef]);
-
   return (
     <main>
-      {!loading && videoUrl && videoDbInfo ? (
+      {videoUrl ? (
         <>
           <Player
             style={{ display: "grid", width: "100%" }}
