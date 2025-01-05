@@ -5,7 +5,7 @@ import { createClient } from "@/app/utils/supabase/client";
 import Link from "next/link";
 import { useFileDetails } from "../../contexts/FileDetailsContext";
 import { showDirectoryPicker } from "file-system-access";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 type VideoInfo = {
   name: string;
