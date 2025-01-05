@@ -6,8 +6,8 @@ import { Dispatch, SetStateAction } from "react";
 
 type VideoInfo = {
   name: string;
-  thumbnail: string | null;
-  duration: number | null;
+  thumbnail: string;
+  duration: number;
   videoUrl: string;
 };
 
@@ -21,63 +21,27 @@ type VideoInfoFromDbWithUrl = {
   videoUrl: string;
 };
 
-type VideoInfoFromDb = Omit<VideoInfoFromDbWithUrl, "videoUrl">;
-
-async function fetchVideosInDb() {
-  const supabase = createClient();
-  const { data } = await supabase.from("videos").select();
-  return data;
-}
-
-async function upsertToDb(videoDetails: VideoInfo[]) {
-  const supabase = createClient();
-
-  const videosInDb = await fetchVideosInDb();
-  const matchingVideosFromDb: VideoInfoFromDbWithUrl[] = [];
-
-  const { data } = await supabase
-    .from("videos")
-    .upsert(
-      videoDetails.map((detail) => {
-        if (videosInDb !== null) {
-          let matchingVideo: VideoInfoFromDbWithUrl = videosInDb.find(
-            (video: VideoInfoFromDb) => video.id === detail.name
-          );
-          matchingVideo.videoUrl = detail.videoUrl;
-          matchingVideosFromDb.push(matchingVideo);
-          if (!matchingVideo) {
-            // Inserts into db as new entry
-            return {
-              id: detail.name,
-              file_name: detail.name,
-              thumbnail: detail.thumbnail,
-              progress: 0,
-              duration: detail.duration,
-            };
-          } else {
-            // Upserts to db without overwriting progress
-            return {
-              id: detail.name,
-              file_name: detail.name,
-              thumbnail: detail.thumbnail,
-              progress: matchingVideo.progress,
-              duration: detail.duration,
-            };
-          }
-        }
-      })
-    )
-    .select();
-
-  if (data) {
-  }
-  return matchingVideosFromDb;
+async function amendType(videoDetails: VideoInfo[]) {
+  const videosWithNewTypes: VideoInfoFromDbWithUrl[] = videoDetails.map(
+    (video) => {
+      return {
+        id: video.name,
+        user_id: "a",
+        file_name: video.name,
+        thumbnail: video.thumbnail,
+        progress: 0,
+        duration: video.duration,
+        videoUrl: video.videoUrl,
+      };
+    }
+  );
+  return videosWithNewTypes;
 }
 
 async function processFile(file: File): Promise<{
   name: string;
-  thumbnail: string | null;
-  duration: number | null;
+  thumbnail: string;
+  duration: number;
   videoUrl: string;
 }> {
   const video = document.createElement("video");
@@ -111,7 +75,7 @@ async function processFile(file: File): Promise<{
   });
 }
 
-export function HandleFolderSelectDb({
+export function HandleFolderSelectNoDb({
   setFileDetails,
 }: {
   setFileDetails: Dispatch<SetStateAction<VideoInfoFromDbWithUrl[]>>;
@@ -122,8 +86,8 @@ export function HandleFolderSelectDb({
         const handle = await showDirectoryPicker();
         const details: {
           name: string;
-          thumbnail: string | null;
-          duration: number | null;
+          thumbnail: string;
+          duration: number;
           videoUrl: string;
         }[] = [];
 
@@ -145,7 +109,7 @@ export function HandleFolderSelectDb({
             details.push(await processFile(file));
           })
         );
-        const pickedVideos = await upsertToDb(details);
+        const pickedVideos = await amendType(details);
         setFileDetails(pickedVideos);
       } catch (error) {
         console.error(error);

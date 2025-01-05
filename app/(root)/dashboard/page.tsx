@@ -4,8 +4,9 @@ import { formatDuration } from "@/app/utils/general/formatters";
 import Link from "next/link";
 import { useFileDetails } from "../../contexts/FileDetailsContext";
 import { useEffect, useState } from "react";
-import { HandleFolderSelectDb } from "@/app/components/ui/shared/HandleFolderSelectDb";
+import { HandleFolderSelect } from "@/app/components/ui/shared/HandleFolderSelect";
 import { createClient } from "@/app/utils/supabase/client";
+import { HandleFolderSelectNoDb } from "@/app/components/ui/shared/HandleFolderSelectNoDb";
 
 export default function Dashboard() {
   const { fileDetails, setFileDetails } = useFileDetails();
@@ -41,9 +42,9 @@ export default function Dashboard() {
   return (
     <main>
       {sessionWithEmail ? (
-        <HandleFolderSelectDb setFileDetails={setFileDetails} />
+        <HandleFolderSelect setFileDetails={setFileDetails} />
       ) : (
-        ""
+        <HandleFolderSelectNoDb setFileDetails={setFileDetails} />
       )}
 
       {fileDetails.length > 0 ? (
