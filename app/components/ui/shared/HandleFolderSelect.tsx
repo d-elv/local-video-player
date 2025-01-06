@@ -6,8 +6,8 @@ import { Dispatch, SetStateAction } from "react";
 
 type VideoInfo = {
   name: string;
-  thumbnail: string | null;
-  duration: number | null;
+  thumbnail: string;
+  duration: number;
   videoUrl: string;
 };
 
@@ -33,19 +33,29 @@ async function upsertToDb(videoDetails: VideoInfo[]) {
   const supabase = createClient();
 
   const videosInDb = await fetchVideosInDb();
-  const matchingVideosFromDb: VideoInfoFromDbWithUrl[] = [];
+  const videosToDisplay: VideoInfoFromDbWithUrl[] = [];
 
   const { data } = await supabase
     .from("videos")
     .upsert(
       videoDetails.map((detail) => {
         if (videosInDb !== null) {
-          let matchingVideo: VideoInfoFromDbWithUrl = videosInDb.find(
+          const matchingVideo: VideoInfoFromDbWithUrl = videosInDb.find(
             (video: VideoInfoFromDb) => video.id === detail.name
           );
 
           if (!matchingVideo) {
             // Inserts into db as new entry
+            const videoToPush = {
+              id: detail.name,
+              user_id: "a",
+              file_name: detail.name,
+              thumbnail: detail.thumbnail,
+              progress: 0,
+              duration: detail.duration,
+              videoUrl: detail.videoUrl,
+            };
+            videosToDisplay.push(videoToPush);
             return {
               id: detail.name,
               file_name: detail.name,
@@ -55,7 +65,7 @@ async function upsertToDb(videoDetails: VideoInfo[]) {
             };
           } else {
             matchingVideo.videoUrl = detail.videoUrl;
-            matchingVideosFromDb.push(matchingVideo);
+            videosToDisplay.push(matchingVideo);
             // Upserts to db without overwriting progress
             return {
               id: detail.name,
@@ -72,13 +82,13 @@ async function upsertToDb(videoDetails: VideoInfo[]) {
 
   if (data) {
   }
-  return matchingVideosFromDb;
+  return videosToDisplay;
 }
 
 async function processFile(file: File): Promise<{
   name: string;
-  thumbnail: string | null;
-  duration: number | null;
+  thumbnail: string;
+  duration: number;
   videoUrl: string;
 }> {
   const video = document.createElement("video");
@@ -121,12 +131,7 @@ export function HandleFolderSelect({
     async function showPicker() {
       try {
         const handle = await showDirectoryPicker();
-        const details: {
-          name: string;
-          thumbnail: string | null;
-          duration: number | null;
-          videoUrl: string;
-        }[] = [];
+        const details: VideoInfo[] = [];
 
         async function getFiles(handle: FileSystemDirectoryHandle) {
           const filesToProcess = [];
