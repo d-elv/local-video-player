@@ -2,7 +2,7 @@
 
 import { createClient } from "@/app/utils/supabase/client";
 import { showDirectoryPicker } from "file-system-access";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 
 type VideoInfo = {
   name: string;
@@ -127,17 +127,23 @@ export function HandleFolderSelect({
 }: {
   setFileDetails: Dispatch<SetStateAction<VideoInfoFromDbWithUrl[]>>;
 }) {
+  const [fileCountDiscrepancy, setFileCountDiscrepancy] = useState<number>(0);
+
   async function handleShowPicker() {
     async function showPicker() {
       try {
         const handle = await showDirectoryPicker();
         const details: VideoInfo[] = [];
+        let fileCount = 0;
 
         async function getFiles(handle: FileSystemDirectoryHandle) {
           const filesToProcess = [];
           for await (const entry of handle.values()) {
             if (entry.kind === "file") {
               const file = await entry.getFile();
+              if (file.name !== ".DS_Store") {
+                fileCount++;
+              }
               if (!file.type.startsWith("video/")) continue;
               filesToProcess.push(file);
             }
@@ -152,6 +158,11 @@ export function HandleFolderSelect({
           })
         );
         const pickedVideos = await upsertToDb(details);
+        const filesToList = pickedVideos.length;
+
+        if (filesToList < fileCount) {
+          setFileCountDiscrepancy(fileCount - filesToList);
+        }
         setFileDetails(pickedVideos);
       } catch (error) {
         console.error(error);
@@ -170,6 +181,13 @@ export function HandleFolderSelect({
       >
         Scan a folder with the media you want to watch
       </button>
+      <p className="mt-2 text-sm text-red-600">
+        {fileCountDiscrepancy > 0
+          ? fileCountDiscrepancy === 1
+            ? `${fileCountDiscrepancy} file was scanned but not able to be processed. Please confirm video files are H264 MP4s`
+            : `${fileCountDiscrepancy} files were scanned but not able to be processed. Please confirm video files are H264 MP4s`
+          : ""}
+      </p>
     </>
   );
 }
