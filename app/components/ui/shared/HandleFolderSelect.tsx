@@ -43,8 +43,7 @@ async function upsertToDb(videoDetails: VideoInfo[]) {
           let matchingVideo: VideoInfoFromDbWithUrl = videosInDb.find(
             (video: VideoInfoFromDb) => video.id === detail.name
           );
-          matchingVideo.videoUrl = detail.videoUrl;
-          matchingVideosFromDb.push(matchingVideo);
+
           if (!matchingVideo) {
             // Inserts into db as new entry
             return {
@@ -55,6 +54,8 @@ async function upsertToDb(videoDetails: VideoInfo[]) {
               duration: detail.duration,
             };
           } else {
+            matchingVideo.videoUrl = detail.videoUrl;
+            matchingVideosFromDb.push(matchingVideo);
             // Upserts to db without overwriting progress
             return {
               id: detail.name,
@@ -149,7 +150,9 @@ export function HandleFolderSelect({
         setFileDetails(pickedVideos);
       } catch (error) {
         console.error(error);
-        alert("This device may not support directory picking");
+        alert(
+          "An error has occurred. Please raise an issue report with Dan Elvey"
+        );
       }
     }
     showPicker();
