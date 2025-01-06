@@ -127,7 +127,7 @@ export function HandleFolderSelect({
 }: {
   setFileDetails: Dispatch<SetStateAction<VideoInfoFromDbWithUrl[]>>;
 }) {
-  const [fileCountDiscrepancy, setFileCountDiscrepancy] = useState<number>(0);
+  const [fileCountDiscrepancy, setFileCountDiscrepancy] = useState(0);
 
   async function handleShowPicker() {
     async function showPicker() {
