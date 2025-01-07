@@ -11,6 +11,16 @@ import { createClient } from "@/app/utils/supabase/client";
 //   title: "Watch",
 // };
 
+async function fetchCurrentUser(): Promise<string> {
+  const supabase = createClient();
+  const { data } = await supabase.auth.getSession();
+
+  if (data.session && data.session.user.email) {
+    return data.session.user.email;
+  }
+  return "bogus";
+}
+
 export default function Watch() {
   const supabase = createClient();
   const searchParams = useSearchParams();
@@ -26,12 +36,14 @@ export default function Watch() {
 
   useEffect(() => {
     async function updateProgress() {
+      const userEmail = await fetchCurrentUser();
+
       if (videoRef.current !== null) {
         console.log(videoName);
         const { data, error } = await supabase
           .from("videos")
           .update({ progress: videoRef.current.currentTime })
-          .eq("id", videoName)
+          .eq("id", videoName + "_" + userEmail)
           .select();
         if (data || error) {
         }

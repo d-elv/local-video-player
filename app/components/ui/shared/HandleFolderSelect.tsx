@@ -29,12 +29,23 @@ async function fetchVideosInDb() {
   return data;
 }
 
+async function fetchCurrentUser(): Promise<string> {
+  const supabase = createClient();
+  const { data } = await supabase.auth.getSession();
+
+  if (data.session && data.session.user.email) {
+    return data.session.user.email;
+  }
+  return "bogus";
+}
+
 async function upsertToDb(videoDetails: VideoInfo[]) {
   const supabase = createClient();
 
   const videosInDb = await fetchVideosInDb();
   const videosToDisplay: VideoInfoFromDbWithUrl[] = [];
-  console.log(videosInDb);
+
+  const userEmail = await fetchCurrentUser();
 
   const { data } = await supabase
     .from("videos")
@@ -60,7 +71,7 @@ async function upsertToDb(videoDetails: VideoInfo[]) {
             console.log(detail);
             // Inserts into db as new entry
             return {
-              id: detail.name,
+              id: detail.name + "_" + userEmail,
               file_name: detail.name,
               thumbnail: detail.thumbnail,
               progress: 0,
@@ -71,7 +82,7 @@ async function upsertToDb(videoDetails: VideoInfo[]) {
             videosToDisplay.push(matchingVideo);
             // Upserts to db without overwriting progress
             return {
-              id: detail.name,
+              id: detail.name + "_" + userEmail,
               file_name: detail.name,
               thumbnail: detail.thumbnail,
               progress: matchingVideo.progress,
@@ -98,7 +109,7 @@ async function processFile(file: File): Promise<{
   video.src = URL.createObjectURL(file);
   return new Promise((resolve) => {
     video.onloadedmetadata = () => {
-      // Captures thumbnail at 1 second
+      // Captures thumbnail
       if (video.duration > 120) {
         video.currentTime = 60;
       } else {
