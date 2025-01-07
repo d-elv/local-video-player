@@ -90,7 +90,7 @@ export default function Dashboard() {
                     {file.file_name}
                   </p>
                   {file.duration ? (
-                    <p className="text-black ml-auto mr-2 max-w-full lg:mr-4">
+                    <p className="text-white ml-auto mr-2 max-w-full lg:mr-4 text-sm pl-1 pr-1 pt-0.5 pb-0.5 bg-slate-700 rounded-sm">
                       {formatDuration(file.duration)}
                     </p>
                   ) : null}
