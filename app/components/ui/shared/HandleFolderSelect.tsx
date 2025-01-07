@@ -96,7 +96,11 @@ async function processFile(file: File): Promise<{
   return new Promise((resolve) => {
     video.onloadedmetadata = () => {
       // Captures thumbnail at 1 second
-      video.currentTime = 1;
+      if (video.duration > 120) {
+        video.currentTime = 60;
+      } else {
+        video.currentTime = 1;
+      }
     };
 
     video.onseeked = () => {

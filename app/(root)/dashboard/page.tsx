@@ -7,6 +7,17 @@ import { useEffect, useState } from "react";
 import { HandleFolderSelect } from "@/app/components/ui/shared/HandleFolderSelect";
 import { createClient } from "@/app/utils/supabase/client";
 import { HandleFolderSelectNoDb } from "@/app/components/ui/shared/HandleFolderSelectNoDb";
+import { VideoInfoFromDb } from "./actions";
+
+type VideoInfoFromDbWithUrl = {
+  id: string;
+  user_id: string;
+  file_name: string;
+  thumbnail: string;
+  progress: number;
+  duration: number;
+  videoUrl: string;
+};
 
 export default function Dashboard() {
   const { fileDetails, setFileDetails } = useFileDetails();
@@ -39,6 +50,13 @@ export default function Dashboard() {
     iPhoneDetector();
   }, []);
 
+  function sortVideosOnDisplay(
+    a: VideoInfoFromDbWithUrl,
+    b: VideoInfoFromDbWithUrl
+  ) {
+    return a.file_name.localeCompare(b.file_name);
+  }
+
   return (
     <main>
       {sessionWithEmail ? (
@@ -49,7 +67,7 @@ export default function Dashboard() {
 
       {fileDetails.length > 0 ? (
         <ul>
-          {fileDetails.map((file, index) => {
+          {fileDetails.sort(sortVideosOnDisplay).map((file, index) => {
             return (
               <li className="mt-2 bg-sky-300 rounded-lg" key={index}>
                 <Link
