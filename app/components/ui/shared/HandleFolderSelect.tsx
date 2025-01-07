@@ -34,6 +34,7 @@ async function upsertToDb(videoDetails: VideoInfo[]) {
 
   const videosInDb = await fetchVideosInDb();
   const videosToDisplay: VideoInfoFromDbWithUrl[] = [];
+  console.log(videosInDb);
 
   const { data } = await supabase
     .from("videos")
@@ -41,11 +42,10 @@ async function upsertToDb(videoDetails: VideoInfo[]) {
       videoDetails.map((detail) => {
         if (videosInDb !== null) {
           const matchingVideo: VideoInfoFromDbWithUrl = videosInDb.find(
-            (video: VideoInfoFromDb) => video.id === detail.name
+            (video: VideoInfoFromDb) => video.file_name === detail.name
           );
 
           if (!matchingVideo) {
-            // Inserts into db as new entry
             const videoToPush = {
               id: detail.name,
               user_id: "a",
@@ -56,6 +56,9 @@ async function upsertToDb(videoDetails: VideoInfo[]) {
               videoUrl: detail.videoUrl,
             };
             videosToDisplay.push(videoToPush);
+
+            console.log(detail);
+            // Inserts into db as new entry
             return {
               id: detail.name,
               file_name: detail.name,

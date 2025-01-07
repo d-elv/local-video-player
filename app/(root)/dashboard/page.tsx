@@ -7,7 +7,6 @@ import { useEffect, useState } from "react";
 import { HandleFolderSelect } from "@/app/components/ui/shared/HandleFolderSelect";
 import { createClient } from "@/app/utils/supabase/client";
 import { HandleFolderSelectNoDb } from "@/app/components/ui/shared/HandleFolderSelectNoDb";
-import { VideoInfoFromDb } from "./actions";
 
 type VideoInfoFromDbWithUrl = {
   id: string;

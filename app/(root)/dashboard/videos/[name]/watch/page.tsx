@@ -18,7 +18,7 @@ export default function Watch() {
   const progress = searchParams.get("progress");
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const pathname = usePathname();
-  const videoName = pathname.split("/")[3];
+  const videoName = decodeURI(pathname.split("/")[3]);
 
   if (!videoUrl) {
     notFound();
@@ -27,6 +27,7 @@ export default function Watch() {
   useEffect(() => {
     async function updateProgress() {
       if (videoRef.current !== null) {
+        console.log(videoName);
         const { data, error } = await supabase
           .from("videos")
           .update({ progress: videoRef.current.currentTime })
@@ -37,7 +38,6 @@ export default function Watch() {
       }
     }
     const intervalId = setInterval(updateProgress, 5000);
-
     return () => clearInterval(intervalId);
   }, [supabase, videoName]);
 
