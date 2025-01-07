@@ -68,7 +68,6 @@ async function upsertToDb(videoDetails: VideoInfo[]) {
             };
             videosToDisplay.push(videoToPush);
 
-            console.log(detail);
             // Inserts into db as new entry
             return {
               id: detail.name + "_" + userEmail,
@@ -125,7 +124,7 @@ async function processFile(file: File): Promise<{
       canvas.height = video.videoHeight;
 
       ctx?.drawImage(video, 0, 0, canvas.width, canvas.height);
-      const thumbnail = canvas.toDataURL("image/webp", 0.5);
+      let thumbnail = canvas.toDataURL("image/png", 0.5);
 
       resolve({
         name: file.name,
