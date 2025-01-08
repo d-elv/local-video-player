@@ -133,9 +133,15 @@ async function processFile(file: File): Promise<{
         videoUrl: video.src,
       });
     };
-    video.onerror = () => {
-      alert("Video rejected " + file.name);
-    };
+    video.addEventListener("error", function (event) {
+      alert(
+        `An error has occurred on file ${file.name.substring(
+          0,
+          -4
+        )}... - Please check the console for details`
+      );
+      console.log(event.error);
+    });
   });
 }
 

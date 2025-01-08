@@ -86,7 +86,7 @@ export default function Dashboard() {
                       className="w-[102px] h-[72px] object-cover rounded-tl-lg rounded-bl-lg"
                     />
                   ) : null}
-                  <p className="text-black truncate ml-2 lg:ml-4">
+                  <p className="text-black truncate ml-2 mr-1 lg:ml-4">
                     {file.file_name}
                   </p>
                   {file.duration ? (
