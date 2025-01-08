@@ -134,11 +134,14 @@ async function processFile(file: File): Promise<{
       });
     };
     video.addEventListener("error", function (event) {
-      alert("Ahh:" + event.error);
+      alert(
+        `An error has occurred on file ${file.name.substring(
+          0,
+          -4
+        )}... - Please check the console for details`
+      );
+      console.log(event.error);
     });
-    // video.onerror = () => {
-    //   alert("Video rejected " + file.name);
-    // };
   });
 }
 
