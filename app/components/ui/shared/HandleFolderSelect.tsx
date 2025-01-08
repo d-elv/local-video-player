@@ -1,6 +1,10 @@
 "use client";
 
+import { fetchCurrentUser } from "@/app/hooks/fetchCurrentUser";
+import { fetchVideosInDb } from "@/app/hooks/fetchVideosInDb";
+import { VideoSkeleton } from "@/app/ui/skeletons";
 import { createClient } from "@/app/utils/supabase/client";
+import { User } from "@supabase/supabase-js";
 import { showDirectoryPicker } from "file-system-access";
 import { Dispatch, SetStateAction, useState } from "react";
 
@@ -21,80 +25,40 @@ type VideoInfoFromDbWithUrl = {
   videoUrl: string;
 };
 
-type VideoInfoFromDb = Omit<VideoInfoFromDbWithUrl, "videoUrl">;
-
-async function fetchVideosInDb() {
-  const supabase = createClient();
-  const { data } = await supabase.from("videos").select();
-  return data;
-}
-
-async function fetchCurrentUser(): Promise<string> {
-  const supabase = createClient();
-  const { data } = await supabase.auth.getSession();
-
-  if (data.session && data.session.user.email) {
-    return data.session.user.email;
-  }
-  return "bogus";
-}
-
 async function upsertToDb(videoDetails: VideoInfo[]) {
   const supabase = createClient();
-
   const videosInDb = await fetchVideosInDb();
-  const videosToDisplay: VideoInfoFromDbWithUrl[] = [];
+  const user: User | null = await fetchCurrentUser();
 
-  const userEmail = await fetchCurrentUser();
+  const videosToDisplay: VideoInfoFromDbWithUrl[] = videoDetails.map(
+    (detail) => {
+      const matchingVideo = videosInDb?.find(
+        (video: VideoInfoFromDbWithUrl) => video.file_name === detail.name
+      );
 
-  const { data } = await supabase
+      if (!matchingVideo) {
+        return {
+          id: detail.name + "_" + user?.email,
+          user_id: user?.id,
+          file_name: detail.name,
+          thumbnail: detail.thumbnail,
+          progress: 0,
+          duration: detail.duration,
+          videoUrl: detail.videoUrl,
+        };
+      } else {
+        return {
+          ...matchingVideo,
+          videoUrl: detail.videoUrl,
+        };
+      }
+    }
+  );
+
+  await supabase
     .from("videos")
-    .upsert(
-      videoDetails.map((detail) => {
-        if (videosInDb !== null) {
-          const matchingVideo: VideoInfoFromDbWithUrl = videosInDb.find(
-            (video: VideoInfoFromDb) => video.file_name === detail.name
-          );
+    .upsert(videosToDisplay.map(({ videoUrl, ...dbFields }) => dbFields));
 
-          if (!matchingVideo) {
-            const videoToPush = {
-              id: detail.name,
-              user_id: "a",
-              file_name: detail.name,
-              thumbnail: detail.thumbnail,
-              progress: 0,
-              duration: detail.duration,
-              videoUrl: detail.videoUrl,
-            };
-            videosToDisplay.push(videoToPush);
-
-            // Inserts into db as new entry
-            return {
-              id: detail.name + "_" + userEmail,
-              file_name: detail.name,
-              thumbnail: detail.thumbnail,
-              progress: 0,
-              duration: detail.duration,
-            };
-          } else {
-            matchingVideo.videoUrl = detail.videoUrl;
-            videosToDisplay.push(matchingVideo);
-            // Upserts to db without overwriting progress
-            return {
-              id: detail.name + "_" + userEmail,
-              file_name: detail.name,
-              thumbnail: detail.thumbnail,
-              progress: matchingVideo.progress,
-              duration: detail.duration,
-            };
-          }
-        }
-      })
-    )
-    .select();
-
-  if (data) {
-  }
   return videosToDisplay;
 }
 
@@ -146,26 +110,31 @@ async function processFile(file: File): Promise<{
 }
 
 export function HandleFolderSelect({
+  fileDetails,
   setFileDetails,
 }: {
+  fileDetails: VideoInfoFromDbWithUrl[];
   setFileDetails: Dispatch<SetStateAction<VideoInfoFromDbWithUrl[]>>;
 }) {
   const [fileCountDiscrepancy, setFileCountDiscrepancy] = useState(0);
+  const [fileCount, setFileCount] = useState(0);
 
   async function handleShowPicker() {
     async function showPicker() {
       try {
         const handle = await showDirectoryPicker();
         const details: VideoInfo[] = [];
-        let fileCount = 0;
 
         async function getFiles(handle: FileSystemDirectoryHandle) {
+          setFileDetails([]);
+          setFileCount(0);
+
           const filesToProcess = [];
           for await (const entry of handle.values()) {
             if (entry.kind === "file") {
               const file = await entry.getFile();
               if (file.name !== ".DS_Store") {
-                fileCount++;
+                setFileCount((previousCount) => previousCount + 1);
               }
               if (!file.type.startsWith("video/")) continue;
               filesToProcess.push(file);
@@ -211,6 +180,13 @@ export function HandleFolderSelect({
             : `${fileCountDiscrepancy} files were scanned but not able to be processed. Please confirm video files are H264 MP4s`
           : ""}
       </p>
+      {fileCount > 0 && fileDetails.length === 0
+        ? Array.from({ length: Math.min(fileCount, 3) }, (_, index) => (
+            <div key={index}>
+              <VideoSkeleton />
+            </div>
+          ))
+        : ""}
     </>
   );
 }

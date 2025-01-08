@@ -3,10 +3,11 @@
 import { formatDuration } from "@/app/utils/general/formatters";
 import Link from "next/link";
 import { useFileDetails } from "../../contexts/FileDetailsContext";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { HandleFolderSelect } from "@/app/components/ui/shared/HandleFolderSelect";
 import { createClient } from "@/app/utils/supabase/client";
 import { HandleFolderSelectNoDb } from "@/app/components/ui/shared/HandleFolderSelectNoDb";
+import { VideoSkeleton } from "@/app/ui/skeletons";
 
 type VideoInfoFromDbWithUrl = {
   id: string;
@@ -59,7 +60,10 @@ export default function Dashboard() {
   return (
     <main>
       {sessionWithEmail ? (
-        <HandleFolderSelect setFileDetails={setFileDetails} />
+        <HandleFolderSelect
+          setFileDetails={setFileDetails}
+          fileDetails={fileDetails}
+        />
       ) : (
         <HandleFolderSelectNoDb setFileDetails={setFileDetails} />
       )}
