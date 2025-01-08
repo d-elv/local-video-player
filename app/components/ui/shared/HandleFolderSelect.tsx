@@ -25,8 +25,6 @@ type VideoInfoFromDbWithUrl = {
   videoUrl: string;
 };
 
-type VideoInfoFromDb = Omit<VideoInfoFromDbWithUrl, "videoUrl">;
-
 async function upsertToDb(videoDetails: VideoInfo[]) {
   const supabase = createClient();
   const videosInDb = await fetchVideosInDb();
