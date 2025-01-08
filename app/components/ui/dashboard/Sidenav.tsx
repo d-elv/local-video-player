@@ -5,7 +5,7 @@ import { ThemeSwitch } from "@/app/components/ui/shared/DarkModeToggle";
 
 export default async function SideNav() {
   return (
-    <div className="flex h-16 flex-shrink-0 md:h-full md:flex-col md:py-4 md:px-2 md:w-44">
+    <div className="flex h-16 flex-shrink-0 md:h-svh md:flex-col md:py-4 md:px-2 md:w-44">
       <Link
         className="flex w-28 md:w-full md:h-20 rounded-lg bg-blue-200"
         href="/dashboard"
