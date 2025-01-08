@@ -60,9 +60,10 @@ export default function Dashboard() {
   return (
     <main>
       {sessionWithEmail ? (
-        <Suspense fallback={<VideoSkeleton />}>
-          <HandleFolderSelect setFileDetails={setFileDetails} />
-        </Suspense>
+        <HandleFolderSelect
+          setFileDetails={setFileDetails}
+          fileDetails={fileDetails}
+        />
       ) : (
         <HandleFolderSelectNoDb setFileDetails={setFileDetails} />
       )}
