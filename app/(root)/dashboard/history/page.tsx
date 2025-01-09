@@ -24,14 +24,19 @@ export default function SavedVideos() {
       }
     }
     fetchVideosInDb();
+    console.log("Fetching videos...");
   }, []);
+
+  function sortVideosOnDisplay(a: VideoInfoFromDb, b: VideoInfoFromDb) {
+    return a.file_name.localeCompare(b.file_name);
+  }
 
   return (
     <>
-      <h1 className="text-2xl">Saved Videos</h1>
+      <h1 className="text-2xl">History</h1>
       {videosFromDb.length > 0 ? (
         <ul>
-          {videosFromDb.map((file, index) => (
+          {videosFromDb.sort(sortVideosOnDisplay).map((file, index) => (
             <li
               className="mt-2 bg-sky-300 rounded-lg w-full h-full flex items-center justify-start hover:bg-sky-400 transition-all"
               key={index}
@@ -45,7 +50,7 @@ export default function SavedVideos() {
               ) : null}
               <div>
                 <p className="text-black truncate ml-2 lg:ml-4 font-semibold">
-                  {file.id}
+                  {file.file_name}
                 </p>
                 {file.duration ? (
                   <p className="text-black ml-2 lg:mr-4 text-sm">
@@ -60,7 +65,7 @@ export default function SavedVideos() {
           ))}
         </ul>
       ) : (
-        <p className="mt-2">Saved Videos will appear here</p>
+        <p className="mt-2 animate-pulse">Saved Videos will appear here...</p>
       )}
     </>
   );

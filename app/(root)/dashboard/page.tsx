@@ -3,11 +3,10 @@
 import { formatDuration } from "@/app/utils/general/formatters";
 import Link from "next/link";
 import { useFileDetails } from "../../contexts/FileDetailsContext";
-import { Suspense, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { HandleFolderSelect } from "@/app/components/ui/shared/HandleFolderSelect";
 import { createClient } from "@/app/utils/supabase/client";
 import { HandleFolderSelectNoDb } from "@/app/components/ui/shared/HandleFolderSelectNoDb";
-import { VideoSkeleton } from "@/app/ui/skeletons";
 
 type VideoInfoFromDbWithUrl = {
   id: string;

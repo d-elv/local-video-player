@@ -26,7 +26,7 @@ export default async function SideNav() {
           </div>
         </Link>
         <Link
-          href="/dashboard/saved-videos"
+          href="/dashboard/history"
           className="flex justify-center w-full h-full md:h-10 hover:bg-accent transition-colors"
         >
           <div className="flex rounded-md justify-center items-center md:justify-start  text-primary-foreground md:p-2 md:w-full">
