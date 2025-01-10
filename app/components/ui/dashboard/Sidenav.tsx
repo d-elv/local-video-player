@@ -1,4 +1,4 @@
-import { FilmIcon, HouseIcon } from "lucide-react";
+import { CassetteTape, FilmIcon, HouseIcon } from "lucide-react";
 import Link from "next/link";
 import SignOutButton from "./SignOutButton";
 import { ThemeSwitch } from "@/app/components/ui/shared/DarkModeToggle";
@@ -32,6 +32,15 @@ export default async function SideNav() {
           <div className="flex rounded-md justify-center items-center md:justify-start  text-primary-foreground md:p-2 md:w-full">
             <FilmIcon />
             <p className="pl-2">History</p>
+          </div>
+        </Link>
+        <Link
+          href="/dashboard/demo"
+          className="flex justify-center w-full h-full md:h-10 hover:bg-accent transition-colors"
+        >
+          <div className="flex rounded-md justify-center items-center md:justify-start  text-primary-foreground md:p-2 md:w-full">
+            <CassetteTape />
+            <p className="pl-2">Demo</p>
           </div>
         </Link>
         <div className="flex items-center justify-center w-full h-full text-primary-foreground md:justify-start md:h-10 hover:bg-accent hover:rounded-tr-md md:hover:rounded-tl-none md:hover:rounded-tr-none md:hover:rounded-bl-md md:hover:rounded-br-md md:mt-auto transition-colors">

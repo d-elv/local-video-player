@@ -2,13 +2,6 @@
 
 import React, { createContext, useContext, useState } from "react";
 
-type VideoInfo = {
-  name: string;
-  thumbnail: string | null;
-  duration: number | null;
-  videoUrl: string;
-};
-
 type VideoInfoFromDbWithUrl = {
   id: string;
   user_id: string;
