@@ -42,7 +42,7 @@ export default function Dashboard() {
   useEffect(() => {
     function iPhoneDetector() {
       if (window.navigator.userAgent.includes("iPhone")) {
-        alert("We have detected you are on an iPhone");
+        alert("We have detected you may be on an iPhone");
         alert("Please expect this app not to function correctly");
       }
     }
