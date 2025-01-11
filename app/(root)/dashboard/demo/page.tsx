@@ -62,12 +62,12 @@ export default function DemoPage() {
               Time to Process...
             </h2>
             <p className="md:text-lg">
-              Once you've selected a folder, or some files, the app will process
-              them and, if you are signed in, will save their information or, if
-              they have already been processed, retrieve the golden piece of
-              data, their <span className="italic">progress</span>. Once the
-              processing is complete, you will be greeted with a list of
-              thumbnails and video titles like below
+              Once you've selected a folder, or individual files, the app will
+              process them and, if you are signed in, will save their
+              information to look at later on the History page. If already
+              saved, their <span className="italic">progress</span> will be
+              retrieved. Once the processing is complete, you will be greeted
+              with a list of thumbnails and video titles like below
             </p>
             <div className="self-center">
               <Image
@@ -85,12 +85,12 @@ export default function DemoPage() {
               Time to Process...
             </h2>
             <p className="md:text-lg">
-              Once you've selected a folder, or some files, the app will process
-              them and, if you are signed in, will save their information or, if
-              they have already been processed, retrieve the golden piece of
-              data, their <span className="italic">progress</span>. Once the
-              processing is complete, you will be greeted with a list of
-              thumbnails and video titles like below
+              Once you've selected a folder, or individual files, the app will
+              process them and, if you are signed in, will save their
+              information to look at later on the History page. If already
+              saved, their <span className="italic">progress</span> will be
+              retrieved. Once the processing is complete, you will be greeted
+              with a list of thumbnails and video titles like below
             </p>
             <div className="self-center">
               <Image
@@ -166,7 +166,9 @@ export default function DemoPage() {
             <p className="md:text-lg mt-1">
               If you don't have any files to hand.{" "}
               <span className="italic text-blue-500 hover:underline hover:cursor-pointer">
-                Download this one
+                <a href="/videos/local-video-player-demo.mp4" download>
+                  Download this one
+                </a>
               </span>{" "}
               and try it out on the Home page
             </p>
