@@ -1,6 +1,5 @@
 "use client";
 
-import { cn } from "@/app/utils/general/cn";
 import { SquareArrowRight } from "lucide-react";
 import Image from "next/image";
 import { Dispatch, SetStateAction, useState } from "react";
