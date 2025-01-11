@@ -30,14 +30,7 @@ export default function DemoPage() {
       </header>
 
       <section className="flex flex-col flex-grow md:grid md:grid-cols-2 gap-2 md:gap-4 md:mt-4">
-        <div
-          className={cn(
-            "flex flex-col relative border-orange-400 border-2 rounded-lg p-2 md:col-start-1 md:row-start-1",
-            {
-              // "max-h-[47.5%]": stage === 1 || stage === 2,
-            }
-          )}
-        >
+        <div className="flex flex-col relative border-orange-400 border-2 rounded-lg p-2 md:col-start-1 md:row-start-1">
           <h2 className="font-semibold mb-1 text-lg md:text-xl">
             Welcome to your Local Video Player!
           </h2>
@@ -65,14 +58,7 @@ export default function DemoPage() {
         </div>
 
         {stage >= 2 ? (
-          <div
-            className={cn(
-              "flex flex-col relative border-orange-400 border-2 rounded-lg p-2 md:col-start-2 md:row-start-1 transition-all duration-150 ease-in-out",
-              {
-                // "max-h-[47.5%]": stage === 1 || stage === 2,
-              }
-            )}
-          >
+          <div className="flex flex-col relative border-orange-400 border-2 rounded-lg p-2 md:col-start-2 md:row-start-1 transition-all duration-150 ease-in-out">
             <h2 className="font-semibold mb-1 text-lg md:text-xl">
               Time to Process...
             </h2>
@@ -95,14 +81,7 @@ export default function DemoPage() {
             <NextArrow newStage={3} setStage={setStage} />
           </div>
         ) : (
-          <div
-            className={cn(
-              "flex flex-col relative border-orange-400 border-2 rounded-lg p-2 md:col-start-2 md:row-start-1 opacity-0 translate-y-4",
-              {
-                // "max-h-[47.5%]": stage === 1 || stage === 2,
-              }
-            )}
-          >
+          <div className="flex flex-col relative border-orange-400 border-2 rounded-lg p-2 md:col-start-2 md:row-start-1 opacity-0 translate-y-4">
             <h2 className="font-semibold mb-1 text-lg md:text-xl">
               Time to Process...
             </h2>
@@ -139,9 +118,9 @@ export default function DemoPage() {
             <div className="self-center">
               <Image
                 src="/images/demo-03-video-player.png"
-                alt="File picker on Desktop Safari"
-                width={500}
-                height={300}
+                alt="The watch page with a video player"
+                width={300}
+                height={200}
               />
             </div>
             <NextArrow newStage={4} setStage={setStage} />
@@ -160,8 +139,8 @@ export default function DemoPage() {
               <Image
                 src="/images/demo-03-video-player.png"
                 alt="File picker on Desktop Safari"
-                width={500}
-                height={300}
+                width={300}
+                height={200}
               />
             </div>
             <NextArrow newStage={4} setStage={setStage} />
@@ -174,8 +153,11 @@ export default function DemoPage() {
               Something to Note
             </h2>
             <p className="md:text-lg">
-              If you refresh the browser after you've processed some files, you
-              will need to process them again.
+              If you refresh the browser after you've processed some files,{" "}
+              <span className="font-bold">
+                you will need to process them again
+              </span>
+              .
             </p>
             <p className="md:text-lg mt-1">
               This is due to how the url that is created to watch the file works
@@ -214,49 +196,6 @@ export default function DemoPage() {
           </div>
         )}
       </section>
-      {/* Header 
-
-        Skip Button
-      Griiiiiiiiiiiiiiiiiiiid
-        Section     Section
-          
-        Section     Section
-      Griiiiiiiiiiiiiiiiiiiid
-
-      Grid = {
-        Sections appear in a 2x2 grid on desktop.
-        Sections appear in a column on mobile.  
-        }
-
-      Section = {
-        Bit of text. Screenshot. <Image />
-        Arrow for next section (state to hold progress on page)
-        }
-          */}
-
-      {/* What are the sections?
-        
-          Hello and welcome to the local video player! 
-          This app lets you play home videos from your local system (Mac, PC, iPad)
-          and, if signed in, will store your progress so you can return to them later!  
-          
-          Firstly, head to the Home page and you'll be greeted with a big blue button.
-          When you click on that, you'll be presented with a Finder-like file picker, like the below:
-          <Image />
-
-          
-          Once you've selected a folder, or some files, the app will process them and, again,
-          if you are signed in, will save their information to the database or, if they have already been
-          processed, retrieve the golden piece of data, your <span className="italic">progress</span>
-          Once the processing is complete, you will be greeted with a list like the below
-          <Image />
-          
-          
-          Now, all you need to do is watch! <span className="italic">Click</span> on a video you want
-          to watch and you'll be navigated through to a player. Every 5 seconds, your progress is saved
-          to the database, and
-
-        */}
     </>
   );
 }
