@@ -1,5 +1,6 @@
 "use client";
 
+import { VideoSkeleton } from "@/app/ui/skeletons";
 import { showDirectoryPicker } from "file-system-access";
 import { Dispatch, SetStateAction, useState } from "react";
 
@@ -75,25 +76,33 @@ async function processFile(file: File): Promise<{
 }
 
 export function HandleFolderSelectNoDb({
+  fileDetails,
   setFileDetails,
 }: {
+  fileDetails: VideoInfoFromDbWithUrl[];
   setFileDetails: Dispatch<SetStateAction<VideoInfoFromDbWithUrl[]>>;
 }) {
   const [fileCountDiscrepancy, setFileCountDiscrepancy] = useState(0);
+  const [fileCount, setFileCount] = useState(0);
+
   async function handleShowPicker() {
     async function showPicker() {
       try {
         const handle = await showDirectoryPicker();
         const details: VideoInfo[] = [];
-        let fileCount = 0;
+        let fileCountLocal = 0;
 
         async function getFiles(handle: FileSystemDirectoryHandle) {
+          setFileDetails([]);
+          setFileCount(0);
+          setFileCountDiscrepancy(0);
           const filesToProcess = [];
+
           for await (const entry of handle.values()) {
             if (entry.kind === "file") {
               const file = await entry.getFile();
               if (file.name !== ".DS_Store") {
-                fileCount++;
+                fileCountLocal++;
               }
               if (!file.type.startsWith("video/")) continue;
               filesToProcess.push(file);
@@ -102,6 +111,7 @@ export function HandleFolderSelectNoDb({
           return filesToProcess;
         }
         const filesToProcess = await getFiles(handle);
+        setFileCount(fileCountLocal);
 
         await Promise.all(
           filesToProcess.map(async (file) => {
@@ -111,13 +121,16 @@ export function HandleFolderSelectNoDb({
         const pickedVideos = await amendType(details);
         const filesToList = pickedVideos.length;
 
-        if (filesToList < fileCount) {
-          setFileCountDiscrepancy(fileCount - filesToList);
+        if (filesToList < fileCountLocal) {
+          setFileCountDiscrepancy(fileCountLocal - filesToList);
         }
+
         setFileDetails(pickedVideos);
       } catch (error) {
         console.error(error);
-        alert("This device may not support directory picking");
+        alert(
+          "An error has occurred. Please raise an issue report with Dan Elvey"
+        );
       }
     }
     showPicker();
@@ -137,6 +150,13 @@ export function HandleFolderSelectNoDb({
             : `${fileCountDiscrepancy} files were scanned but not able to be processed. Please confirm video files are H264 MP4s`
           : ""}
       </p>
+      {fileCount > 0 && fileDetails.length === 0
+        ? Array.from({ length: Math.min(fileCount, 3) }, (_, index) => (
+            <div key={index}>
+              <VideoSkeleton />
+            </div>
+          ))
+        : ""}
     </>
   );
 }

@@ -60,11 +60,14 @@ export default function Dashboard() {
     <main>
       {sessionWithEmail ? (
         <HandleFolderSelect
-          setFileDetails={setFileDetails}
           fileDetails={fileDetails}
+          setFileDetails={setFileDetails}
         />
       ) : (
-        <HandleFolderSelectNoDb setFileDetails={setFileDetails} />
+        <HandleFolderSelectNoDb
+          fileDetails={fileDetails}
+          setFileDetails={setFileDetails}
+        />
       )}
 
       {fileDetails.length > 0 ? (
