@@ -112,7 +112,7 @@ export default function LoginPage() {
           <FormButton type="submit" disabled={isPending}>
             Log in
           </FormButton>
-          <p className="text-sm mb-0">
+          <p className="text-base mb-0">
             Not Signed Up?{" "}
             <Link href="/login/signup" className="italic">
               Click Here
@@ -123,10 +123,10 @@ export default function LoginPage() {
           ---------- <span className="text-base font-normal">or</span>{" "}
           ----------
         </p>
+        <FormButton type="button" onClick={signInAnonymously}>
+          Sign In Anonymously
+        </FormButton>
       </form>
-      <FormButton type="button" onClick={signInAnonymously}>
-        Sign In Anonymously
-      </FormButton>
     </div>
   );
 }
