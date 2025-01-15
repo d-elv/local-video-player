@@ -8,6 +8,7 @@ import Link from "next/link";
 import { useActionState, useEffect, useRef, useState } from "react";
 import { useToast } from "@/app/hooks/use-toast";
 import { EyeOff, Eye } from "lucide-react";
+import { useDebouncedCallback } from "use-debounce";
 
 export default function SignupPage() {
   const [password, setPassword] = useState("");
@@ -24,6 +25,21 @@ export default function SignupPage() {
   const [confirmShown, setConfirmShown] = useState(false);
   const confirmType = confirmShown ? "text" : "password";
   const [showMatchError, setShowMatchError] = useState(false);
+
+  const handleConfirm = useDebouncedCallback(
+    (password: string, confirm: string) => {
+      if (password !== confirm) {
+        setShowMatchError(true);
+      } else {
+        setShowMatchError(false);
+      }
+    },
+    300
+  );
+
+  useEffect(() => {
+    handleConfirm(password, confirm);
+  }, [password, confirm]);
 
   useEffect(() => {
     if (response.success) {
@@ -56,16 +72,6 @@ export default function SignupPage() {
       emailRef.current.focus();
     }
   }, []);
-
-  useEffect(() => {
-    setTimeout(() => {
-      if (password !== confirm) {
-        setShowMatchError(true);
-      } else {
-        setShowMatchError(false);
-      }
-    }, 1000);
-  }, [password, confirm]);
 
   return (
     <div className="absolute top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%] flex justify-center items-center flex-col">
@@ -135,7 +141,10 @@ export default function SignupPage() {
         </div>
 
         <div className="flex flex-row justify-between items-center mt-4">
-          <FormButton formAction={signupAction} disabled={isPending}>
+          <FormButton
+            formAction={signupAction}
+            disabled={isPending || showMatchError}
+          >
             Sign Up
           </FormButton>
           <p className="text-sm">
@@ -147,7 +156,7 @@ export default function SignupPage() {
         </div>
       </form>
       <p
-        className={`text-red-700 mt-1 text-sm self-start absolute top-60 z-0 transition-all ease-in-out duration-300 ${
+        className={`text-red-700 mt-1 text self-start absolute top-72 z-0 transition-all ease-in-out duration-300 ${
           showMatchError
             ? "opacity-100 translate-y-8"
             : "opacity-0 translate-y-0"
