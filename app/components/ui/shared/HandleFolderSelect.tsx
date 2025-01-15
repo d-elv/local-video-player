@@ -124,17 +124,19 @@ export function HandleFolderSelect({
       try {
         const handle = await showDirectoryPicker();
         const details: VideoInfo[] = [];
+        let fileCountLocal = 0;
 
         async function getFiles(handle: FileSystemDirectoryHandle) {
           setFileDetails([]);
           setFileCount(0);
-
+          setFileCountDiscrepancy(0);
           const filesToProcess = [];
+
           for await (const entry of handle.values()) {
             if (entry.kind === "file") {
               const file = await entry.getFile();
               if (file.name !== ".DS_Store") {
-                setFileCount((previousCount) => previousCount + 1);
+                fileCountLocal++;
               }
               if (!file.type.startsWith("video/")) continue;
               filesToProcess.push(file);
@@ -143,6 +145,7 @@ export function HandleFolderSelect({
           return filesToProcess;
         }
         const filesToProcess = await getFiles(handle);
+        setFileCount(fileCountLocal);
 
         await Promise.all(
           filesToProcess.map(async (file) => {
@@ -152,9 +155,10 @@ export function HandleFolderSelect({
         const pickedVideos = await upsertToDb(details);
         const filesToList = pickedVideos.length;
 
-        if (filesToList < fileCount) {
-          setFileCountDiscrepancy(fileCount - filesToList);
+        if (filesToList < fileCountLocal) {
+          setFileCountDiscrepancy(fileCountLocal - filesToList);
         }
+
         setFileDetails(pickedVideos);
       } catch (error) {
         console.error(error);
