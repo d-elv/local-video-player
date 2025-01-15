@@ -71,62 +71,68 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="absolute top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%] flex flex-col justify-center items-center">
-      <form
-        className="flex flex-col place-content-center rounded-lg border-gray-700 webk border-2 p-4 bg-secondary w-96"
-        key="login-form"
-        action={loginAction}
-      >
-        <h1 className="flex self-center font-bold mb-4 text-2xl">Login</h1>
-        <label htmlFor="email" className="text-sm">
-          Email
-        </label>
-        <input
-          id="email"
-          name="email"
-          type="email"
-          ref={emailRef}
-          required
-          className="bg-background text-primary-foreground font-sans rounded-md mt-1 p-1 pl-2 "
-        />
-        <label htmlFor="password" className="text-sm mt-2">
-          Password
-        </label>
-        <div className="bg-background rounded-md flex items-center justify-between">
+    <>
+      <h1 className="text-red-600 text-center font-bold md:text-lg p-2">
+        Supabase is currently experiencing capacity issues, which affects the
+        signed in service of this app.
+      </h1>
+      <div className="absolute top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%] flex flex-col justify-center items-center">
+        <form
+          className="flex flex-col place-content-center rounded-lg border-gray-700 webk border-2 p-4 bg-secondary w-96"
+          key="login-form"
+          action={loginAction}
+        >
+          <h1 className="flex self-center font-bold mb-4 text-2xl">Login</h1>
+          <label htmlFor="email" className="text-sm">
+            Email
+          </label>
           <input
-            id="password"
-            name="password"
-            type={passwordType}
+            id="email"
+            name="email"
+            type="email"
+            ref={emailRef}
             required
-            className="bg-background text-primary-foreground w-full font-sans pl-2 p-1 rounded-md"
+            className="bg-background text-primary-foreground font-sans rounded-md mt-1 p-1 pl-2 "
           />
-          <button
-            onClick={() => setPasswordShown(!passwordShown)}
-            type="button"
-            className="pr-2 w-fit"
-          >
-            {passwordShown ? <Eye /> : <EyeOff />}
-          </button>
-        </div>
-        <div className="flex flex-row justify-between items-center mt-4">
-          <FormButton type="submit" disabled={isPending}>
-            Log in
-          </FormButton>
-          <p className="text-base mb-0">
-            Not Signed Up?{" "}
-            <Link href="/login/signup" className="italic">
-              Click Here
-            </Link>
+          <label htmlFor="password" className="text-sm mt-2">
+            Password
+          </label>
+          <div className="bg-background rounded-md flex items-center justify-between">
+            <input
+              id="password"
+              name="password"
+              type={passwordType}
+              required
+              className="bg-background text-primary-foreground w-full font-sans pl-2 p-1 rounded-md"
+            />
+            <button
+              onClick={() => setPasswordShown(!passwordShown)}
+              type="button"
+              className="pr-2 w-fit"
+            >
+              {passwordShown ? <Eye /> : <EyeOff />}
+            </button>
+          </div>
+          <div className="flex flex-row justify-between items-center mt-4">
+            <FormButton type="submit" disabled={isPending}>
+              Log in
+            </FormButton>
+            <p className="text-base mb-0">
+              Not Signed Up?{" "}
+              <Link href="/login/signup" className="italic">
+                Click Here
+              </Link>
+            </p>
+          </div>
+          <p className="self-center font-bold text-lg mb-2">
+            ---------- <span className="text-base font-normal">or</span>{" "}
+            ----------
           </p>
-        </div>
-        <p className="self-center font-bold text-lg mb-2">
-          ---------- <span className="text-base font-normal">or</span>{" "}
-          ----------
-        </p>
-        <FormButton type="button" onClick={signInAnonymously}>
-          Sign In Anonymously
-        </FormButton>
-      </form>
-    </div>
+          <FormButton type="button" onClick={signInAnonymously}>
+            Sign In Anonymously
+          </FormButton>
+        </form>
+      </div>
+    </>
   );
 }
