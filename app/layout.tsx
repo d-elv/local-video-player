@@ -17,7 +17,10 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Local Video Player",
+  title: {
+    template: "%s | Local Video Player",
+    default: "Video Player Dashboard",
+  },
   description: "Watch video files stored on your device in your browser",
 };
 
