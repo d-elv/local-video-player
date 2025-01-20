@@ -1,4 +1,4 @@
-# Local Video Plyaer
+# Local Video Player
 
 Do you have a bunch of video files say from digitised home video tapes or dvds and you don't have a good mechanism to watch them? Well, this app can hopefully solve some of that problem. It will let you scan in your files and watch them, saving your progress as you go, so when you come back, you can pick up where you left off.
 
