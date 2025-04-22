@@ -1,6 +1,7 @@
 import { CassetteTape, FilmIcon, HouseIcon } from "lucide-react";
 import Link from "next/link";
-import SignOutButton from "./SignOutButton";
+// import SignOutButton from "./SignOutButton";
+import { SignOutButton } from "@clerk/nextjs";
 import { ThemeSwitch } from "@/app/components/ui/shared/DarkModeToggle";
 
 export default async function SideNav() {
@@ -47,7 +48,7 @@ export default async function SideNav() {
           <ThemeSwitch />
         </div>
       </div>
-      <SignOutButton />
+      <SignOutButton redirectUrl="/login" />
     </div>
   );
 }
