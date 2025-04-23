@@ -12,5 +12,14 @@ export default defineSchema({
     .index("by_clerkId", ["clerkId"])
     .index("by_email", ["email"]),
 
-  // Your other tables here
+  videos: defineTable({
+    userId: v.id("users"),
+    customId: v.string(),
+    fileName: v.string(),
+    thumbnail: v.string(),
+    progress: v.number(),
+    duration: v.number(),
+  })
+    .index("by_userId", ["userId"])
+    .index("by_userId_and_fileName", ["userId", "fileName"]),
 });

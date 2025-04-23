@@ -7,6 +7,9 @@ import { createClient } from "@/app/utils/supabase/client";
 import { User } from "@supabase/supabase-js";
 import { showDirectoryPicker } from "file-system-access";
 import { Dispatch, SetStateAction, useState } from "react";
+import { Id } from "@/convex/_generated/dataModel";
+import { useMutation, useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
 
 type VideoInfo = {
   name: string;
@@ -15,14 +18,15 @@ type VideoInfo = {
   videoUrl: string;
 };
 
-type VideoInfoFromDbWithUrl = {
-  id: string;
-  user_id: string;
-  file_name: string;
+type VideoInfoFromConvex = {
+  _id: Id<"videos">;
+  _creationTime: number;
+  userId: Id<"users">;
+  fileName: string;
   thumbnail: string;
   progress: number;
   duration: number;
-  videoUrl: string;
+  videoUrl?: string;
 };
 
 async function upsertToDb(videoDetails: VideoInfo[]) {
@@ -30,30 +34,28 @@ async function upsertToDb(videoDetails: VideoInfo[]) {
   const videosInDb = await fetchVideosInDb();
   const user: User | null = await fetchCurrentUser();
 
-  const videosToDisplay: VideoInfoFromDbWithUrl[] = videoDetails.map(
-    (detail) => {
-      const matchingVideo = videosInDb?.find(
-        (video: VideoInfoFromDbWithUrl) => video.file_name === detail.name
-      );
+  const videosToDisplay: VideoInfoFromConvex[] = videoDetails.map((detail) => {
+    const matchingVideo = videosInDb?.find(
+      (video: VideoInfoFromConvex) => video.fileName === detail.name
+    );
 
-      if (!matchingVideo) {
-        return {
-          id: detail.name + "_" + user?.email,
-          user_id: user?.id,
-          file_name: detail.name,
-          thumbnail: detail.thumbnail,
-          progress: 0,
-          duration: detail.duration,
-          videoUrl: detail.videoUrl,
-        };
-      } else {
-        return {
-          ...matchingVideo,
-          videoUrl: detail.videoUrl,
-        };
-      }
+    if (!matchingVideo) {
+      return {
+        id: detail.name + "_" + user?.email,
+        user_id: user?.id,
+        fileName: detail.name,
+        thumbnail: detail.thumbnail,
+        progress: 0,
+        duration: detail.duration,
+        videoUrl: detail.videoUrl,
+      };
+    } else {
+      return {
+        ...matchingVideo,
+        videoUrl: detail.videoUrl,
+      };
     }
-  );
+  });
 
   await supabase
     .from("videos")
@@ -84,11 +86,11 @@ async function processFile(file: File): Promise<{
       const canvas = document.createElement("canvas");
       const ctx = canvas.getContext("2d");
 
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
+      canvas.width = video.videoWidth * 0.1;
+      canvas.height = video.videoHeight * 0.1;
 
       ctx?.drawImage(video, 0, 0, canvas.width, canvas.height);
-      let thumbnail = canvas.toDataURL("image/png", 0.5);
+      let thumbnail = canvas.toDataURL("image/png", 0.1);
 
       resolve({
         name: file.name,
@@ -113,11 +115,35 @@ export function HandleFolderSelect({
   fileDetails,
   setFileDetails,
 }: {
-  fileDetails: VideoInfoFromDbWithUrl[];
-  setFileDetails: Dispatch<SetStateAction<VideoInfoFromDbWithUrl[]>>;
+  fileDetails: VideoInfoFromConvex[];
+  setFileDetails: Dispatch<SetStateAction<VideoInfoFromConvex[]>>;
 }) {
   const [fileCountDiscrepancy, setFileCountDiscrepancy] = useState(0);
   const [fileCount, setFileCount] = useState(0);
+
+  const insertVideo = useMutation(api.videos.insertVideo);
+  const user = useQuery(api.users.getMe);
+
+  async function insertToConvex(videoDetails: VideoInfo[]) {
+    const results: VideoInfoFromConvex[] = [];
+
+    for (const video of videoDetails) {
+      const result = await insertVideo({
+        fileName: video.name,
+        customId: video.name + "_" + user?.email,
+        thumbnail: video.thumbnail,
+        duration: video.duration,
+      });
+
+      if (result) {
+        results.push({
+          ...result,
+          videoUrl: video.videoUrl,
+        });
+      }
+    }
+    return results;
+  }
 
   async function handleShowPicker() {
     async function showPicker() {
@@ -152,7 +178,7 @@ export function HandleFolderSelect({
             details.push(await processFile(file));
           })
         );
-        const pickedVideos = await upsertToDb(details);
+        const pickedVideos = await insertToConvex(details);
         const filesToList = pickedVideos.length;
 
         if (filesToList < fileCountLocal) {

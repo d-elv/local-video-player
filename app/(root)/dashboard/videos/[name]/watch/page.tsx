@@ -3,7 +3,8 @@
 import { notFound, usePathname, useSearchParams } from "next/navigation";
 import Player from "next-video/player";
 import { useEffect, useRef } from "react";
-import { createClient } from "@/app/utils/supabase/client";
+import { useMutation, useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
 
 // import { Metadata } from "next";
 
@@ -11,24 +12,15 @@ import { createClient } from "@/app/utils/supabase/client";
 //   title: "Watch",
 // };
 
-async function fetchCurrentUser(): Promise<string> {
-  const supabase = createClient();
-  const { data } = await supabase.auth.getSession();
-
-  if (data.session && data.session.user.email) {
-    return data.session.user.email;
-  }
-  return "bogus";
-}
-
 export default function Watch() {
-  const supabase = createClient();
   const searchParams = useSearchParams();
   const videoUrl = searchParams.get("videoUrl");
   const progress = searchParams.get("progress");
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const pathname = usePathname();
   const videoName = decodeURI(pathname.split("/")[3]);
+  const user = useQuery(api.users.getMe);
+  const updateVideoProgress = useMutation(api.videos.updateVideoProgress);
 
   if (!videoUrl) {
     notFound();
@@ -36,22 +28,20 @@ export default function Watch() {
 
   useEffect(() => {
     async function updateProgress() {
-      const userEmail = await fetchCurrentUser();
+      if (!user) {
+        return;
+      }
 
       if (videoRef.current !== null) {
-        console.log(videoName);
-        const { data, error } = await supabase
-          .from("videos")
-          .update({ progress: videoRef.current.currentTime })
-          .eq("id", videoName + "_" + userEmail)
-          .select();
-        if (data || error) {
-        }
+        updateVideoProgress({
+          fileName: videoName,
+          progress: videoRef.current.currentTime,
+        });
       }
     }
     const intervalId = setInterval(updateProgress, 5000);
     return () => clearInterval(intervalId);
-  }, [supabase, videoName]);
+  }, [videoName]);
 
   return (
     <main>

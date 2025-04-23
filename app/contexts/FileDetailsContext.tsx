@@ -1,24 +1,24 @@
 "use client";
 
+import { Id } from "@/convex/_generated/dataModel";
 import React, { createContext, useContext, useState } from "react";
 
-type VideoInfoFromDbWithUrl = {
-  id: string;
-  user_id: string;
-  file_name: string;
+type VideoInfoFromConvex = {
+  _id: Id<"videos">;
+  _creationTime: number;
+  userId: Id<"users">;
+  fileName: string;
   thumbnail: string;
   progress: number;
   duration: number;
-  videoUrl: string;
+  videoUrl?: string;
 };
 
-type VideoInfoFromDb = Omit<VideoInfoFromDbWithUrl, "videoUrl">;
+type VideoInfoFromDb = Omit<VideoInfoFromConvex, "videoUrl">;
 
 type FileDetailsContextType = {
-  fileDetails: VideoInfoFromDbWithUrl[];
-  setFileDetails: React.Dispatch<
-    React.SetStateAction<VideoInfoFromDbWithUrl[]>
-  >;
+  fileDetails: VideoInfoFromConvex[];
+  setFileDetails: React.Dispatch<React.SetStateAction<VideoInfoFromConvex[]>>;
 };
 
 type FileDetailsProviderProps = { children: React.ReactNode };
@@ -28,7 +28,7 @@ const FileDetailsContext = createContext<FileDetailsContextType | undefined>(
 );
 
 function FileDetailsProvider({ children }: FileDetailsProviderProps) {
-  const [fileDetails, setFileDetails] = useState<VideoInfoFromDbWithUrl[]>([]);
+  const [fileDetails, setFileDetails] = useState<VideoInfoFromConvex[]>([]);
 
   return (
     <FileDetailsContext.Provider value={{ fileDetails, setFileDetails }}>

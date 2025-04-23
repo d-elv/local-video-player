@@ -3,42 +3,31 @@
 import { formatDuration } from "@/app/utils/general/formatters";
 import Link from "next/link";
 import { useFileDetails } from "../../contexts/FileDetailsContext";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { HandleFolderSelect } from "@/app/components/ui/shared/HandleFolderSelect";
-import { createClient } from "@/app/utils/supabase/client";
-import { HandleFolderSelectNoDb } from "@/app/components/ui/shared/HandleFolderSelectNoDb";
 import { cn } from "@/app/utils/general/cn";
+import { Id } from "@/convex/_generated/dataModel";
+import { useMutation } from "convex/react";
+import { api } from "@/convex/_generated/api";
 
-type VideoInfoFromDbWithUrl = {
-  id: string;
-  user_id: string;
-  file_name: string;
+type VideoInfoFromConvex = {
+  _id: Id<"videos">;
+  _creationTime: number;
+  userId: Id<"users">;
+  fileName: string;
   thumbnail: string;
   progress: number;
   duration: number;
-  videoUrl: string;
+  videoUrl?: string;
 };
 
 export default function Dashboard() {
   const { fileDetails, setFileDetails } = useFileDetails();
-  const [sessionWithEmail, setSessionWithEmail] = useState(true);
 
+  const createOrUpdateUser = useMutation(api.users.createOrUpdateUser);
   useEffect(() => {
-    async function checkSession() {
-      const supabase = createClient();
-      const { data, error } = await supabase.auth.getSession();
-      if (error) {
-        console.log(error);
-      }
-
-      if (data.session?.user.email) {
-        setSessionWithEmail(true);
-      } else {
-        setSessionWithEmail(false);
-      }
-    }
-    checkSession();
-  }, []);
+    createOrUpdateUser();
+  }, [createOrUpdateUser]);
 
   useEffect(() => {
     function iPhoneDetector() {
@@ -50,26 +39,16 @@ export default function Dashboard() {
     iPhoneDetector();
   }, []);
 
-  function sortVideosOnDisplay(
-    a: VideoInfoFromDbWithUrl,
-    b: VideoInfoFromDbWithUrl
-  ) {
-    return a.file_name.localeCompare(b.file_name);
+  function sortVideosOnDisplay(a: VideoInfoFromConvex, b: VideoInfoFromConvex) {
+    return a.fileName.localeCompare(b.fileName);
   }
 
   return (
     <main>
-      {sessionWithEmail ? (
-        <HandleFolderSelect
-          fileDetails={fileDetails}
-          setFileDetails={setFileDetails}
-        />
-      ) : (
-        <HandleFolderSelectNoDb
-          fileDetails={fileDetails}
-          setFileDetails={setFileDetails}
-        />
-      )}
+      <HandleFolderSelect
+        fileDetails={fileDetails}
+        setFileDetails={setFileDetails}
+      />
 
       {fileDetails.length > 0 ? (
         <ul>
@@ -81,7 +60,7 @@ export default function Dashboard() {
               <li className="mt-2 bg-sky-300 rounded-lg" key={index}>
                 <Link
                   href={{
-                    pathname: `/dashboard/videos/${file.file_name}/watch`,
+                    pathname: `/dashboard/videos/${file.fileName}/watch`,
                     query: {
                       videoUrl: file.videoUrl,
                       progress: file.progress,
@@ -92,7 +71,7 @@ export default function Dashboard() {
                   {file.thumbnail ? (
                     <div className="flex flex-col min-w-[102px] relative">
                       <img
-                        alt={`Thumbnail of video titled ${file.file_name}`}
+                        alt={`Thumbnail of video titled ${file.fileName}`}
                         src={file.thumbnail}
                         className={cn(
                           "min-w-[102px] h-[72px] object-cover rounded-tl-lg",
@@ -102,12 +81,13 @@ export default function Dashboard() {
                         )}
                       />
                       <div
-                        className={`w-[${progressBarWidth}%] absolute bottom-0 rounded-md h-0.5 bg-red-600`}
+                        className="absolute bottom-0 rounded-md h-0.5 bg-red-600"
+                        style={{ width: `${progressBarWidth}%` }}
                       ></div>
                     </div>
                   ) : null}
                   <p className="text-black truncate ml-2 mr-1 lg:ml-4">
-                    {file.file_name}
+                    {file.fileName}
                   </p>
                   {file.duration ? (
                     <p className="text-white ml-auto mr-2 max-w-full lg:mr-4 text-sm pl-1 pr-1 pt-0.5 pb-0.5 bg-slate-700 rounded-sm">
