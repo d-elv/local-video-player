@@ -1,13 +1,7 @@
 import { type Metadata } from "next";
 import localFont from "next/font/local";
-import {
-  ClerkProvider,
-  SignInButton,
-  SignUpButton,
-  SignedIn,
-  SignedOut,
-  UserButton,
-} from '@clerk/nextjs'
+import { ClerkProvider } from "@clerk/nextjs";
+import { ConvexClientProvider } from "@/app/providers/ConvexClientProvider";
 import "./globals.css";
 import { FileDetailsProvider } from "./contexts/FileDetailsContext";
 import { ThemeProviders } from "./providers/ThemeProvider";
@@ -44,7 +38,9 @@ export default function RootLayout({
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
           <FileDetailsProvider>
-            <ThemeProviders>{children}</ThemeProviders>
+            <ThemeProviders>
+              <ConvexClientProvider>{children}</ConvexClientProvider>
+            </ThemeProviders>
           </FileDetailsProvider>
           <Toaster />
         </body>
