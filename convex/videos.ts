@@ -1,13 +1,14 @@
+import { Doc } from "./_generated/dataModel";
 import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 
 // Get videos for the current user
 
 export const getVideos = query({
-  handler: async (ctx) => {
+  handler: async (ctx): Promise<Doc<"videos">[]> => {
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) {
-      return [];
+      throw new Error("Not authenticated");
     }
 
     const user = await ctx.db
@@ -16,15 +17,15 @@ export const getVideos = query({
       .first();
 
     if (!user) {
-      return [];
+      throw new Error("User not found");
     }
 
     const videos = await ctx.db
       .query("videos")
-      .withIndex("by_userId", (q) => q.eq("userId", user._id))
-      .first();
+      .filter((q) => q.eq(q.field("userId"), user._id))
+      .collect();
 
-    return videos || [];
+    return videos;
   },
 });
 
