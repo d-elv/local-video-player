@@ -1,10 +1,6 @@
 "use client";
 
-import { fetchCurrentUser } from "@/app/hooks/fetchCurrentUser";
-import { fetchVideosInDb } from "@/app/hooks/fetchVideosInDb";
 import { VideoSkeleton } from "@/app/ui/skeletons";
-import { createClient } from "@/app/utils/supabase/client";
-import { User } from "@supabase/supabase-js";
 import { showDirectoryPicker } from "file-system-access";
 import { Dispatch, SetStateAction, useState } from "react";
 import { Id } from "@/convex/_generated/dataModel";
@@ -28,41 +24,6 @@ type VideoInfoFromConvex = {
   duration: number;
   videoUrl?: string;
 };
-
-async function upsertToDb(videoDetails: VideoInfo[]) {
-  const supabase = createClient();
-  const videosInDb = await fetchVideosInDb();
-  const user: User | null = await fetchCurrentUser();
-
-  const videosToDisplay: VideoInfoFromConvex[] = videoDetails.map((detail) => {
-    const matchingVideo = videosInDb?.find(
-      (video: VideoInfoFromConvex) => video.fileName === detail.name
-    );
-
-    if (!matchingVideo) {
-      return {
-        id: detail.name + "_" + user?.email,
-        user_id: user?.id,
-        fileName: detail.name,
-        thumbnail: detail.thumbnail,
-        progress: 0,
-        duration: detail.duration,
-        videoUrl: detail.videoUrl,
-      };
-    } else {
-      return {
-        ...matchingVideo,
-        videoUrl: detail.videoUrl,
-      };
-    }
-  });
-
-  await supabase
-    .from("videos")
-    .upsert(videosToDisplay.map(({ videoUrl, ...dbFields }) => dbFields));
-
-  return videosToDisplay;
-}
 
 async function processFile(file: File): Promise<{
   name: string;

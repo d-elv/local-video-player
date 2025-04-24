@@ -1,6 +1,5 @@
 import { CassetteTape, FilmIcon, HouseIcon, PowerIcon } from "lucide-react";
 import Link from "next/link";
-// import SignOutButton from "./SignOutButton";
 import { SignOutButton } from "@clerk/nextjs";
 import { ThemeSwitch } from "@/app/components/ui/shared/DarkModeToggle";
 
