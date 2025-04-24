@@ -26,7 +26,7 @@ export default function SavedVideos() {
   if (!videos) {
     return <p className="mt-2 animate-pulse">Loading videos...</p>;
   }
-  console.log(videos);
+
   return (
     <>
       <h1 className="text-2xl">History</h1>

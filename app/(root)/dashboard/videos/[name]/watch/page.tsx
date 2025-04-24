@@ -6,13 +6,7 @@ import { useEffect, useRef } from "react";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 
-// import { Metadata } from "next";
-
-// export const metadata: Metadata = {
-//   title: "Watch",
-// };
-
-export default function Watch() {
+export default function WatchClient() {
   const searchParams = useSearchParams();
   const videoUrl = searchParams.get("videoUrl");
   const progress = searchParams.get("progress");
