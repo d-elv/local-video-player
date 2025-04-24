@@ -2,7 +2,7 @@
 export default {
   providers: [
     {
-      domain: "https://pro-sailfish-84.clerk.accounts.dev/",
+      domain: "https://clerk.bethswatching.uk",
       applicationID: "convex",
     },
   ],
