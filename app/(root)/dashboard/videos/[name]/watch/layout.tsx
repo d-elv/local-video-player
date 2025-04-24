@@ -1,10 +1,10 @@
 import { Metadata } from "next";
 
-type Props = {
+export async function generateMetadata({
+  params,
+}: {
   params: { name: string };
-};
-
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+}): Promise<Metadata> {
   const resolvedParams = await Promise.resolve(params);
   const videoName = decodeURI(
     resolvedParams.name.substring(0, resolvedParams.name.length - 4) || ""
