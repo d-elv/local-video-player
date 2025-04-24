@@ -3,7 +3,7 @@ import { Metadata } from "next";
 export async function generateMetadata({
   params,
 }: {
-  params: { name: string };
+  params: Promise<{ name: string }>;
 }): Promise<Metadata> {
   const resolvedParams = await Promise.resolve(params);
   const videoName = decodeURI(
