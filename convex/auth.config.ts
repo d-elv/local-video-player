@@ -2,7 +2,7 @@
 export default {
   providers: [
     {
-      domain: "https://clerk.bethswatching.uk",
+      domain: "https://precise-dodo-638.convex.cloud",
       applicationID: "convex",
     },
   ],
