@@ -1,5 +1,7 @@
-import type { Metadata } from "next";
+import { type Metadata } from "next";
 import localFont from "next/font/local";
+import { ClerkProvider } from "@clerk/nextjs";
+import { ConvexClientProvider } from "@/app/providers/ConvexClientProvider";
 import "./globals.css";
 import { FileDetailsProvider } from "./contexts/FileDetailsContext";
 import { ThemeProviders } from "./providers/ThemeProvider";
@@ -30,15 +32,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <FileDetailsProvider>
-          <ThemeProviders>{children}</ThemeProviders>
-        </FileDetailsProvider>
-        <Toaster />
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en" suppressHydrationWarning>
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        >
+          <FileDetailsProvider>
+            <ThemeProviders>
+              <ConvexClientProvider>{children}</ConvexClientProvider>
+            </ThemeProviders>
+          </FileDetailsProvider>
+          <Toaster />
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }
