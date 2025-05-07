@@ -7,8 +7,8 @@ import { useEffect } from "react";
 import { HandleFolderSelect } from "@/app/components/ui/shared/HandleFolderSelect";
 import { cn } from "@/app/utils/general/cn";
 import { Id } from "@/convex/_generated/dataModel";
-import { useMutation } from "convex/react";
-import { api } from "@/convex/_generated/api";
+// import { useMutation } from "convex/react";
+// import { api } from "@/convex/_generated/api";
 
 type VideoInfoFromConvex = {
   _id: Id<"videos">;
@@ -24,10 +24,10 @@ type VideoInfoFromConvex = {
 export default function Dashboard() {
   const { fileDetails, setFileDetails } = useFileDetails();
 
-  const createOrUpdateUser = useMutation(api.users.createOrUpdateUser);
-  useEffect(() => {
-    createOrUpdateUser();
-  }, [createOrUpdateUser]);
+  // const createOrUpdateUser = useMutation(api.users.createOrUpdateUser);
+  // useEffect(() => {
+  //   createOrUpdateUser();
+  // }, [createOrUpdateUser]);
 
   useEffect(() => {
     function iPhoneDetector() {
