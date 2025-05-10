@@ -52,6 +52,7 @@ export default function DemoPage() {
               width={500}
               height={300}
               className="w-auto h-auto"
+              priority={true}
             />
           </div>
           <NextArrow newStage={2} setStage={setStage} />
@@ -144,6 +145,7 @@ export default function DemoPage() {
                 alt="File picker on Desktop Safari"
                 width={300}
                 height={200}
+                className="w-auto h-auto"
               />
             </div>
             <NextArrow newStage={4} setStage={setStage} />
