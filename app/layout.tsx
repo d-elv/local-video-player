@@ -6,6 +6,7 @@ import "./globals.css";
 import { FileDetailsProvider } from "./contexts/FileDetailsContext";
 import { ThemeProviders } from "./providers/ThemeProvider";
 import { Toaster } from "@/app/components/ui/shared/toaster";
+import { UserSync } from "./components/UserSync";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -39,7 +40,10 @@ export default function RootLayout({
         >
           <FileDetailsProvider>
             <ThemeProviders>
-              <ConvexClientProvider>{children}</ConvexClientProvider>
+              <ConvexClientProvider>
+                <UserSync />
+                {children}
+              </ConvexClientProvider>
             </ThemeProviders>
           </FileDetailsProvider>
           <Toaster />

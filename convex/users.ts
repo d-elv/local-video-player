@@ -18,7 +18,6 @@ export const getMe = query({
   },
 });
 
-// Create or update user when they log in
 export const createOrUpdateUser = mutation({
   handler: async (ctx) => {
     const identity = await ctx.auth.getUserIdentity();
