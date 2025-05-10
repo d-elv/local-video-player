@@ -49,8 +49,9 @@ export default function DemoPage() {
             <Image
               src="/images/demo-01-file-picker-eg.png"
               alt="File picker on Desktop Safari"
-              width={400}
-              height={200}
+              width={500}
+              height={300}
+              className="w-auto h-auto"
             />
           </div>
           <NextArrow newStage={2} setStage={setStage} />
@@ -75,6 +76,7 @@ export default function DemoPage() {
                 alt="File picker on Desktop Safari"
                 width={500}
                 height={300}
+                className="w-auto h-auto"
               />
             </div>
             <NextArrow newStage={3} setStage={setStage} />
@@ -98,6 +100,7 @@ export default function DemoPage() {
                 alt="File picker on Desktop Safari"
                 width={500}
                 height={300}
+                className="w-auto h-auto"
               />
             </div>
             <NextArrow newStage={3} setStage={setStage} />
@@ -120,6 +123,7 @@ export default function DemoPage() {
                 alt="The watch page with a video player"
                 width={300}
                 height={200}
+                className="w-auto h-auto"
               />
             </div>
             <NextArrow newStage={4} setStage={setStage} />
