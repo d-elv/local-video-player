@@ -53,7 +53,7 @@ export default function Dashboard() {
               <li className="mt-2 bg-sky-300 rounded-lg" key={index}>
                 <Link
                   href={{
-                    pathname: `/dashboard/videos/${file.fileName}/watch`,
+                    pathname: `/dashboard/watch/${file.fileName}`,
                     query: {
                       videoUrl: file.videoUrl,
                       progress: file.progress,
