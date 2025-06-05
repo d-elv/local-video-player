@@ -1,23 +1,12 @@
 "use client";
 
-import { formatDuration } from "@/app/utils/general/formatters";
+import { formatDuration } from "@/app/utils/formatters";
 import Link from "next/link";
 import { useFileDetails } from "../../contexts/FileDetailsContext";
 import { useEffect } from "react";
 import { HandleFolderSelect } from "@/app/components/ui/shared/HandleFolderSelect";
-import { cn } from "@/app/utils/general/cn";
-import { Id } from "@/convex/_generated/dataModel";
-
-type VideoInfoFromConvex = {
-  _id: Id<"videos">;
-  _creationTime: number;
-  userId: Id<"users">;
-  fileName: string;
-  thumbnail: string;
-  progress: number;
-  duration: number;
-  videoUrl?: string;
-};
+import { cn } from "@/app/utils/cn";
+import { VideoInfoFromConvex } from "@/app/types";
 
 export default function Dashboard() {
   const { fileDetails, setFileDetails } = useFileDetails();

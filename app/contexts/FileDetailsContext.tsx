@@ -1,20 +1,7 @@
 "use client";
 
-import { Id } from "@/convex/_generated/dataModel";
 import React, { createContext, useContext, useState } from "react";
-
-type VideoInfoFromConvex = {
-  _id: Id<"videos">;
-  _creationTime: number;
-  userId: Id<"users">;
-  fileName: string;
-  thumbnail: string;
-  progress: number;
-  duration: number;
-  videoUrl?: string;
-};
-
-type VideoInfoFromDb = Omit<VideoInfoFromConvex, "videoUrl">;
+import { VideoInfoFromConvex } from "@/app/types";
 
 type FileDetailsContextType = {
   fileDetails: VideoInfoFromConvex[];

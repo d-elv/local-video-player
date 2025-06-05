@@ -1,27 +1,17 @@
 "use client";
 
-import { formatDuration } from "@/app/utils/general/formatters";
+import { formatDuration } from "@/app/utils/formatters";
 import { api } from "@/convex/_generated/api";
-import { Id } from "@/convex/_generated/dataModel";
-import { useQuery } from "convex/react";
 
-type VideoInfoFromConvex = {
-  _id: Id<"videos">;
-  _creationTime: number;
-  userId: Id<"users">;
-  fileName: string;
-  thumbnail: string;
-  progress: number;
-  duration: number;
-  videoUrl?: string;
-};
+import { useQuery } from "convex/react";
+import { VideoInfoFromConvex } from "@/app/types";
+
+function sortVideosOnDisplay(a: VideoInfoFromConvex, b: VideoInfoFromConvex) {
+  return a.fileName.localeCompare(b.fileName);
+}
 
 export default function SavedVideos() {
   const videos = useQuery(api.videos.getVideos);
-
-  function sortVideosOnDisplay(a: VideoInfoFromConvex, b: VideoInfoFromConvex) {
-    return a.fileName.localeCompare(b.fileName);
-  }
 
   if (!videos) {
     return <p className="mt-2 animate-pulse">Loading videos...</p>;

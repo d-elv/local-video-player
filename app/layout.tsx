@@ -5,7 +5,6 @@ import { ConvexClientProvider } from "@/app/providers/ConvexClientProvider";
 import "./globals.css";
 import { FileDetailsProvider } from "./contexts/FileDetailsContext";
 import { ThemeProviders } from "./providers/ThemeProvider";
-import { Toaster } from "@/app/components/ui/shared/toaster";
 import { UserSync } from "./components/UserSync";
 
 const geistSans = localFont({
@@ -46,7 +45,6 @@ export default function RootLayout({
               </ConvexClientProvider>
             </ThemeProviders>
           </FileDetailsProvider>
-          <Toaster />
         </body>
       </html>
     </ClerkProvider>

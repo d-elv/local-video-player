@@ -3,26 +3,15 @@
 import { VideoSkeleton } from "@/app/ui/skeletons";
 import { showDirectoryPicker } from "file-system-access";
 import { Dispatch, SetStateAction, useState } from "react";
-import { Id } from "@/convex/_generated/dataModel";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
+import { VideoInfoFromConvex } from "@/app/types";
 
 type VideoInfo = {
   name: string;
   thumbnail: string;
   duration: number;
   videoUrl: string;
-};
-
-type VideoInfoFromConvex = {
-  _id: Id<"videos">;
-  _creationTime: number;
-  userId: Id<"users">;
-  fileName: string;
-  thumbnail: string;
-  progress: number;
-  duration: number;
-  videoUrl?: string;
 };
 
 async function processFile(file: File): Promise<{

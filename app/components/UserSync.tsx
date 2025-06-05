@@ -12,7 +12,7 @@ export function UserSync() {
   useEffect(() => {
     if (isLoaded && isSignedIn) {
       createOrUpdateUser()
-        .then(() => console.log("User synced to Convex"))
+        .then(() => {})
         .catch((error) => console.error("Failed to sync user:", error));
     }
   }, [isLoaded, isSignedIn, createOrUpdateUser]);
