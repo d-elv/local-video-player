@@ -3,23 +3,14 @@
 import { formatDuration } from "@/app/utils/formatters";
 import Link from "next/link";
 import { useFileDetails } from "../../contexts/FileDetailsContext";
-import { useEffect } from "react";
 import { HandleFolderSelect } from "@/app/components/ui/shared/HandleFolderSelect";
 import { cn } from "@/app/utils/cn";
 import { VideoInfoFromConvex } from "@/app/types";
+import useDetectDevice from "@/app/hooks/useDetectDevice";
 
 export default function Dashboard() {
   const { fileDetails, setFileDetails } = useFileDetails();
-
-  useEffect(() => {
-    function iPhoneDetector() {
-      if (window.navigator.userAgent.includes("iPhone")) {
-        alert("We have detected you may be on an iPhone");
-        alert("Please expect this app not to function correctly");
-      }
-    }
-    iPhoneDetector();
-  }, []);
+  useDetectDevice();
 
   function sortVideosOnDisplay(a: VideoInfoFromConvex, b: VideoInfoFromConvex) {
     return a.fileName.localeCompare(b.fileName);
@@ -34,12 +25,12 @@ export default function Dashboard() {
 
       {fileDetails.length > 0 ? (
         <ul>
-          {fileDetails.sort(sortVideosOnDisplay).map((file, index) => {
+          {fileDetails.sort(sortVideosOnDisplay).map((file) => {
             const progressBarWidth = Math.round(
               (file.progress / file.duration) * 100
             );
             return (
-              <li className="mt-2 bg-sky-300 rounded-lg" key={index}>
+              <li className="mt-2 bg-sky-300 rounded-lg" key={file.fileName}>
                 <Link
                   href={{
                     pathname: `/dashboard/watch/${file.fileName}`,
