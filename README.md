@@ -6,7 +6,9 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 # Demo of App
 
-[App Demo](https://youtu.be/Hx2qC8hiiMg)
+[![App Demo](https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExZ2draHE4MGlmOXZkMDhleDdodDRwdjYwOXJiYXZxbmVlY2RpdjZ2ayZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/gFjYDmBRirnZO1SoFc/giphy.gif)](https://youtu.be/Hx2qC8hiiMg)
+
+[![Demo Doccou alpha](http://share.gifyoutube.com/KzB6Gb.gif)](https://www.youtube.com/watch?v=ek1j272iAmc)
 
 ## Installation
 
