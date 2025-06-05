@@ -30,10 +30,10 @@ export default async function SideNav() {
         className="flex w-28 md:w-full md:h-20 rounded-lg bg-blue-200"
         href="/dashboard"
       >
-        <div className="bg-[#00FFFF] grow md:rounded-tl-md md:rounded-bl-md"></div>
-        <div className="bg-[#FF00FF] grow"></div>
-        <div className="bg-[#FFFF00] grow"></div>
-        <div className="bg-[#000000] grow rounded-tr-md md:rounded-br-md"></div>
+        <div className="bg-logo-cyan grow md:rounded-tl-md md:rounded-bl-md"></div>
+        <div className="bg-logo-magenta grow"></div>
+        <div className="bg-logo-yellow grow"></div>
+        <div className="bg-black grow rounded-tr-md md:rounded-br-md"></div>
       </Link>
       <div className="flex w-full h-full justify-around rounded-tl-md rounded-tr-md ml-2 mr-2 bg-secondary text-background md:rounded-md md:ml-0 md:mt-2 md:mb-2 md:items-start md:justify-start md:flex-col">
         <NavButton href="/dashboard">

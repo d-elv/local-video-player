@@ -53,6 +53,11 @@ export default {
           DEFAULT: "hsl(var(--popover))",
           foreground: "hsl(var(--popover-foreground))",
         },
+        logo: {
+          cyan: "hsl(var(--logo-cyan))",
+          magenta: "hsl(var(--logo-magenta))",
+          yellow: "hsl(var(--logo-yellow))",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
