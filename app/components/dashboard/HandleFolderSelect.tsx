@@ -6,6 +6,8 @@ import { Dispatch, SetStateAction, useState } from "react";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { VideoInfoFromConvex } from "@/app/types";
+import { Toaster } from "sonner";
+import { toast } from "sonner";
 
 type VideoInfo = {
   name: string;
@@ -98,7 +100,7 @@ export function HandleFolderSelect({
   async function handleShowPicker() {
     async function showPicker() {
       try {
-        const handle = await showDirectoryPicker();
+        const handle = await showDirectoryPicker({ startIn: "downloads" });
         const details: VideoInfo[] = [];
         let fileCountLocal = 0;
 
@@ -137,10 +139,12 @@ export function HandleFolderSelect({
 
         setFileDetails(pickedVideos);
       } catch (error) {
-        console.error(error);
-        alert(
-          "An error has occurred. Please raise an issue report with Dan Elvey"
-        );
+        if (error instanceof DOMException && error.name === "AbortError") {
+        } else {
+          toast.error(
+            "An unexpected error has occurred. Please raise an issue report with Dan Elvey"
+          );
+        }
       }
     }
     showPicker();
@@ -167,6 +171,7 @@ export function HandleFolderSelect({
             </div>
           ))
         : ""}
+      <Toaster />
     </>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import { useFileDetails } from "../../contexts/FileDetailsContext";
-import { HandleFolderSelect } from "@/app/components/ui/shared/HandleFolderSelect";
+import { HandleFolderSelect } from "@/app/components/dashboard/HandleFolderSelect";
 import { VideoList } from "@/app/components/dashboard/VideoList";
 import { useDetectMobileDevice } from "@/app/hooks/useDetectMobileDevice";
 import { Toaster } from "@/app/components/ui/sonner";
