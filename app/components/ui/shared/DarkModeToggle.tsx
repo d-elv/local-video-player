@@ -10,6 +10,26 @@ export function ThemeSwitch() {
 
   useEffect(() => setMounted(true), []);
 
+  function ThemeSwitchButton({
+    children,
+    onClick,
+  }: {
+    children: React.ReactNode;
+    onClick: () => void;
+  }) {
+    return (
+      <button
+        className="flex w-full justify-center items-center md:justify-start md:p-2"
+        onClick={onClick}
+      >
+        {children}
+      </button>
+    );
+  }
+  function ThemeSwitchText({ children }: { children: React.ReactNode }) {
+    return <p className="md:pl-2">{children}</p>;
+  }
+
   if (!mounted)
     return (
       <div className="flex w-full justify-center md:justify-start md:p-2">
@@ -20,25 +40,19 @@ export function ThemeSwitch() {
 
   if (resolvedTheme === "dark") {
     return (
-      <button
-        className="flex w-full justify-center md:justify-start md:p-2"
-        onClick={() => setTheme("light")}
-      >
-        <SunMedium />
-        <p className="pl-2">Dark Mode</p>
-      </button>
+      <ThemeSwitchButton onClick={() => setTheme("light")}>
+        <MoonStar />
+        <ThemeSwitchText>Dark Mode</ThemeSwitchText>
+      </ThemeSwitchButton>
     );
   }
 
   if (resolvedTheme === "light") {
     return (
-      <button
-        className="flex w-full justify-center md:justify-start md:p-2"
-        onClick={() => setTheme("dark")}
-      >
-        <MoonStar />
-        <p className="pl-2">Light Mode</p>
-      </button>
+      <ThemeSwitchButton onClick={() => setTheme("dark")}>
+        <SunMedium />
+        <ThemeSwitchText>Light Mode</ThemeSwitchText>
+      </ThemeSwitchButton>
     );
   }
 }

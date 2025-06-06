@@ -40,7 +40,7 @@ export default async function SideNav() {
           <HouseIcon />
           <NavText>Home</NavText>
         </NavButton>
-        <NavButton href="/history">
+        <NavButton href="/dashboard/history">
           <FilmIcon />
           <NavText>History</NavText>
         </NavButton>
