@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-export default function useDetectDevice() {
+export default function useDetectiPhone() {
   useEffect(() => {
     if (window.navigator.userAgent.includes("iPhone")) {
       alert("We have detected you may be on an iPhone");
