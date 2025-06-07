@@ -10,3 +10,10 @@ export type VideoInfoFromConvex = {
   duration: number;
   videoUrl?: string;
 };
+
+export type VideoInfo = {
+  name: string;
+  thumbnail: string;
+  duration: number;
+  videoUrl: string;
+};
