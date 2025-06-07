@@ -7,15 +7,19 @@ import { useAuth } from "@clerk/nextjs";
 
 export function UserSync() {
   const createOrUpdateUser = useMutation(api.users.createOrUpdateUser);
-  const { isLoaded, isSignedIn } = useAuth();
+  const { isLoaded, isSignedIn, userId } = useAuth();
 
   useEffect(() => {
-    if (isLoaded && isSignedIn) {
+    if (isLoaded && isSignedIn && userId) {
       createOrUpdateUser()
         .then(() => {})
         .catch((error) => console.error("Failed to sync user:", error));
     }
-  }, [isLoaded, isSignedIn, createOrUpdateUser]);
+  }, [isLoaded, isSignedIn, userId, createOrUpdateUser]);
+
+  if (!isLoaded) {
+    return null;
+  }
 
   return null;
 }
