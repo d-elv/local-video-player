@@ -8,6 +8,16 @@ import { VideoInfoFromConvex, VideoInfo } from "@/app/types";
 import { Toaster } from "sonner";
 import { useFilePicker } from "@/app/hooks/useFilePicker";
 
+function FileCountDiscrepancyText({ count }: { count: number }) {
+  if (count === 0) return null;
+  return (
+    <p className="mt-2 text-sm text-red-600">
+      {count} file{count > 1 ? "s" : ""} {count === 1 ? "was" : "were"} scanned
+      but not able to be processed. Please confirm video files are H264 MP4s
+    </p>
+  );
+}
+
 export function HandleFileSelect({
   fileDetails,
   setFileDetails,
@@ -42,17 +52,6 @@ export function HandleFileSelect({
       }
     }
     return results;
-  }
-
-  function FileCountDiscrepancyText({ count }: { count: number }) {
-    if (count === 0) return null;
-    return (
-      <p className="mt-2 text-sm text-red-600">
-        {count} file{count > 1 ? "s" : ""} {count === 1 ? "was" : "were"}{" "}
-        scanned but not able to be processed. Please confirm video files are
-        H264 MP4s
-      </p>
-    );
   }
 
   return (
