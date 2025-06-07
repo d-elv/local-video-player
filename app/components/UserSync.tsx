@@ -15,7 +15,11 @@ export function UserSync() {
         .then(() => {})
         .catch((error) => console.error("Failed to sync user:", error));
     }
-  }, [isLoaded, isSignedIn, createOrUpdateUser]);
+  }, [isLoaded, isSignedIn, userId, createOrUpdateUser]);
+
+  if (!isLoaded) {
+    return null;
+  }
 
   return null;
 }
