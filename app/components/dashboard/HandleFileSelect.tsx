@@ -66,7 +66,7 @@ export function HandleFileSelect({
       <FileCountDiscrepancyText count={fileCountDiscrepancy} />
       {fileCount > 0 && fileDetails.length === 0
         ? Array.from({ length: Math.min(fileCount, 3) }, (_, index) => (
-            <div key={index}>
+            <div key={index} className="mt-2">
               <VideoSkeleton />
             </div>
           ))
